@@ -1,11 +1,11 @@
 import javax.swing.*;
 
 public class MazeApp extends JFrame{
-	MazePanel content;
+	MainView content;
 	public MazeApp(){
 	
 		super("ProZal Maze Solver");
-		content = new MazePanel();
+		content = new MainView();
 		setSize(1000,700);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		add(content);

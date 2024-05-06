@@ -1,6 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
-public class MazePanel extends JPanel{
+public class MainView extends JPanel{
 	private JPanel basePanel;
 	private JMenuBar menuBar;
 	private JMenu fileMenu;
@@ -24,7 +24,7 @@ public class MazePanel extends JPanel{
 	private JLabel yLabel;
 	private JLabel xLabel;
 	private JCheckBox shortestPathCheckbox;
-	public MazePanel(){
+	public MainView(){
 		setLayout(new BorderLayout(0, 0));
 
 		basePanel = new JPanel();
