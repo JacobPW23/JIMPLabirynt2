@@ -6,7 +6,7 @@ public class MazeApp extends JFrame{
 	
 		super("ProZal Maze Solver");
 		content = new MazePanel();
-		setSize(900,700);
+		setSize(1000,700);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		add(content);
 		setVisible(true);
