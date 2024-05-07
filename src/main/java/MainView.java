@@ -7,7 +7,6 @@ public class MainView extends JPanel{
 	private JMenu solutionMenu;
 	private JMenu algorithmMenu;
 	private JMenuItem openPlainItem;
-	private JMenuItem openCompressedItem;
 	private JMenuItem saveAsCompressedItem;
 	private JMenuItem saveSolutionItem;
 	private JMenuItem setAlgoItem;
@@ -23,7 +22,7 @@ public class MainView extends JPanel{
 	private JTextField yTextField;
 	private JLabel yLabel;
 	private JLabel xLabel;
-	private JCheckBox shortestPathCheckbox;
+	
 	public MainView(){
 		setLayout(new BorderLayout(0, 0));
 
@@ -48,15 +47,13 @@ public class MainView extends JPanel{
 		fileMenu.setHorizontalAlignment(SwingConstants.LEFT);
 		menuBar.add(fileMenu);
 
-		openPlainItem = new JMenuItem("Otwórz plik prosty");
+		openPlainItem = new JMenuItem("Otwórz plik z labiryntem");
 		openPlainItem.setHorizontalAlignment(SwingConstants.LEFT);
 		fileMenu.add(openPlainItem);
 
-		openCompressedItem = new JMenuItem("Otwórz plik skompresowany");
-		openCompressedItem.setHorizontalAlignment(SwingConstants.LEFT);
-		fileMenu.add(openCompressedItem);
+		
 
-		saveAsCompressedItem = new JMenuItem("Zapisz jako plik skompresowany");
+		saveAsCompressedItem = new JMenuItem("Zapisz labirynt jako plik skompresowany");
 		saveAsCompressedItem.setHorizontalAlignment(SwingConstants.LEFT);
 		fileMenu.add(saveAsCompressedItem);
 
@@ -84,8 +81,7 @@ public class MainView extends JPanel{
 		basePanel.add(activitiesPanel);
 		activitiesPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
 
-		findSolutionButton = new JButton("Znajdź rozwiązanie");
-		activitiesPanel.add(findSolutionButton);
+		
 
 		pointBeginingButton = new JButton("Wskaż początek");
 		activitiesPanel.add(pointBeginingButton);
@@ -94,10 +90,11 @@ public class MainView extends JPanel{
 		activitiesPanel.add(pointEndButton);
 
 		addIndirectPointButton = new JButton("Dodaj punkt pośredni");
-		activitiesPanel.add(addIndirectPointButton);
+		//activitiesPanel.add(addIndirectPointButton);
 
-		shortestPathCheckbox = new JCheckBox("Najkrótsza ścieżka");
-		activitiesPanel.add(shortestPathCheckbox);
+		findSolutionButton = new JButton("Znajdź rozwiązanie");
+		activitiesPanel.add(findSolutionButton);
+		
 		
 		
 	}
