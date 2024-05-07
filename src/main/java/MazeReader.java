@@ -5,52 +5,34 @@ import java.util.Scanner;
 import java.util.Iterator;
 public class MazeReader{
 
-    private ArrayList<String> mazeLines;
-    private String path;
-
-    public MazeReader(String path){
-        this.path=path;
-        mazeLines = new ArrayList<String>();
 
 
-    }
-    public void readMaze(){
-        String data;
-        try {
-      File myObj = new File(path);
-      Scanner myReader = new Scanner(myObj);
-      while (myReader.hasNextLine()) {
-        data = myReader.nextLine();
-        
-        mazeLines.add(data);
-      }
-      myReader.close();
-    } 
-    
-    catch (FileNotFoundException e) {
-      System.out.println("Wystąpił błąd");
-      e.printStackTrace();
-    }
-  
+	public static ArrayList<String> readMaze(String path){ 
 
-    }
-  public ArrayList<String> getMazeLines(){
+		ArrayList<String> mazeLines= new ArrayList<String>();
 
-    return this.mazeLines;
+		String data;
+		try {
+			File myObj = new File(path);
+			Scanner myReader = new Scanner(myObj);
+			while (myReader.hasNextLine()) {
+				data = myReader.nextLine();
+
+				mazeLines.add(data);
+			}
+			myReader.close();
 
 
-  }
-  public void printMazeLines(){
+		} 
 
-    Iterator<String> it = mazeLines.iterator();
+		catch (FileNotFoundException e) {
+			System.out.println("Wystąpił błąd");
+			e.printStackTrace();
+		}
 
-    while (it.hasNext()){
-      System.out.print(it.next());
-      System.out.println();
+		return mazeLines;
+	}
 
 
-    }
-
-  }
 
 }

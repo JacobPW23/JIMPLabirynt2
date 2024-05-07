@@ -1,12 +1,13 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionListener;
 public class MainView extends JPanel{
 	private JPanel basePanel;
 	private JMenuBar menuBar;
 	private JMenu fileMenu;
 	private JMenu solutionMenu;
 	private JMenu algorithmMenu;
-	private JMenuItem openPlainItem;
+	private JMenuItem openFileItem;
 	private JMenuItem saveAsCompressedItem;
 	private JMenuItem saveSolutionItem;
 	private JMenuItem setAlgoItem;
@@ -22,7 +23,7 @@ public class MainView extends JPanel{
 	private JTextField yTextField;
 	private JLabel yLabel;
 	private JLabel xLabel;
-	
+
 	public MainView(){
 		setLayout(new BorderLayout(0, 0));
 
@@ -40,18 +41,18 @@ public class MainView extends JPanel{
 
 	}
 	private void initMenuPanel(){
-			menuBar = new JMenuBar();
+		menuBar = new JMenuBar();
 
 
 		fileMenu = new JMenu("Plik");
 		fileMenu.setHorizontalAlignment(SwingConstants.LEFT);
 		menuBar.add(fileMenu);
 
-		openPlainItem = new JMenuItem("Otwórz plik z labiryntem");
-		openPlainItem.setHorizontalAlignment(SwingConstants.LEFT);
-		fileMenu.add(openPlainItem);
+		openFileItem = new JMenuItem("Otwórz plik z labiryntem");
+		openFileItem.setHorizontalAlignment(SwingConstants.LEFT);
+		fileMenu.add(openFileItem);
 
-		
+
 
 		saveAsCompressedItem = new JMenuItem("Zapisz labirynt jako plik skompresowany");
 		saveAsCompressedItem.setHorizontalAlignment(SwingConstants.LEFT);
@@ -81,7 +82,7 @@ public class MainView extends JPanel{
 		basePanel.add(activitiesPanel);
 		activitiesPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
 
-		
+
 
 		pointBeginingButton = new JButton("Wskaż początek");
 		activitiesPanel.add(pointBeginingButton);
@@ -94,9 +95,9 @@ public class MainView extends JPanel{
 
 		findSolutionButton = new JButton("Znajdź rozwiązanie");
 		activitiesPanel.add(findSolutionButton);
-		
-		
-		
+
+
+
 	}
 
 	private void initBottomPanel(){
@@ -104,24 +105,44 @@ public class MainView extends JPanel{
 		FlowLayout flowLayout = (FlowLayout) bottomPanel.getLayout();
 		flowLayout.setAlignment(FlowLayout.RIGHT);
 		add(bottomPanel, BorderLayout.SOUTH);
-		
+
 		xLabel = new JLabel("X:");
 		bottomPanel.add(xLabel);
-		
+
 		xTextField = new JTextField("0");
 		xTextField.setHorizontalAlignment(SwingConstants.CENTER);
 		bottomPanel.add(xTextField);
 		xTextField.setColumns(5);
-		
+
 		yLabel = new JLabel("Y:");
 		bottomPanel.add(yLabel);
-		
+
 		yTextField = new JTextField("0");
 		yTextField.setHorizontalAlignment(SwingConstants.CENTER);
 		bottomPanel.add(yTextField);
 		yTextField.setColumns(5);
 
 	}
+	public MazeStage getMazeStage(){
+
+		return stage;
+	}
+	public void addOpenFileListener(ActionListener listener){
+
+		openFileItem.addActionListener(listener);
 
 
+	}
+
+	public void addSaveCompressedListener(ActionListener listener){
+
+		saveAsCompressedItem.addActionListener(listener);
+
+	}
+
+	public void addSaveSolutionListener(ActionListener listener){
+
+		saveSolutionItem.addActionListener(listener);
+
+	}
 }
