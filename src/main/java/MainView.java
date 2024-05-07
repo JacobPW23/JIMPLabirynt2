@@ -23,6 +23,26 @@ public class MainView extends JPanel{
 	private JTextField yTextField;
 	private JLabel yLabel;
 	private JLabel xLabel;
+	private AlgoChooserDialog algoDialog;
+
+	class AlgoChooserDialog extends JDialog{
+		private JPanel content;
+		public AlgoChooserDialog(JPanel parent){
+			//nie wiem jak ustawić rodzica, może być potrzebny JFrame, który jest w MazeApp, można go np. umieścić w polu tej klasy głównej
+			super((Frame)null);
+			setSize(100,50);
+			content=new JPanel();
+			content.add(new JLabel("Hello Algo"));
+			getRootPane().setContentPane(content);
+
+		}
+
+
+
+
+
+
+	}
 
 	public MainView(){
 		setLayout(new BorderLayout(0, 0));
@@ -36,7 +56,7 @@ public class MainView extends JPanel{
 		initBottomPanel();
 		stage = new MazeStage();
 		add(stage, BorderLayout.CENTER);
-
+		algoDialog= new AlgoChooserDialog(this);
 
 
 	}
@@ -127,6 +147,11 @@ public class MainView extends JPanel{
 
 		return stage;
 	}
+
+	AlgoChooserDialog getAlgoDialog(){
+		
+		return algoDialog;
+	}
 	public void addOpenFileListener(ActionListener listener){
 
 		openFileItem.addActionListener(listener);
@@ -143,6 +168,11 @@ public class MainView extends JPanel{
 	public void addSaveSolutionListener(ActionListener listener){
 
 		saveSolutionItem.addActionListener(listener);
+
+	}
+	public void addAlgoChooseListener(ActionListener listener){
+
+		setAlgoItem.addActionListener(listener);
 
 	}
 }

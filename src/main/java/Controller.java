@@ -7,9 +7,9 @@ public class Controller{
 	private MainView view;
 
 	class MActionListener implements ActionListener{
-		MainView Mview;
+		MainView mainView;
 		public MActionListener (MainView v){
-			Mview=v;
+			mainView=v;
 
 
 		}
@@ -27,12 +27,12 @@ public class Controller{
 			public void actionPerformed(ActionEvent e){
 				JFileChooser fileDialog= new JFileChooser();
 
-				int val=fileDialog.showOpenDialog(this.Mview);
+				int val=fileDialog.showOpenDialog(this.mainView);
 
 				try{
 
-					Mview.getMazeStage().setMazePath(fileDialog.getSelectedFile().getAbsolutePath());
-					Mview.paintComponents(Mview.getGraphics());
+					mainView.getMazeStage().setMazePath(fileDialog.getSelectedFile().getAbsolutePath());
+					mainView.paintComponents(mainView.getGraphics());
 
 				}
 				catch(Exception ex){
@@ -49,7 +49,7 @@ public class Controller{
 
 				JFileChooser fileDialog= new JFileChooser();
 
-				int val=fileDialog.showSaveDialog(this.Mview);
+				int val=fileDialog.showSaveDialog(this.mainView);
 
 			}
 		});
@@ -61,13 +61,20 @@ public class Controller{
 
 				JFileChooser fileDialog= new JFileChooser();
 
-				int val=fileDialog.showSaveDialog(this.Mview);
+				int val=fileDialog.showSaveDialog(this.mainView);
 
 			}
 
 		});
 
+		view.addAlgoChooseListener(new MActionListener(this.view){
 
+			@Override
+			public void actionPerformed(ActionEvent e){
+				mainView.getAlgoDialog().show();
+			}
+
+		});
 	}
 
 
