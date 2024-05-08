@@ -1,33 +1,30 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
-public class MainView extends JPanel{
-	private JPanel basePanel;
+public class MainView extends JFrame{
+	private JPanel topPanel;
 	private JMenuBar menuBar;
 	private JMenu fileMenu;
 	private JMenu solutionMenu;
-	private JMenu algorithmMenu;
 	private JMenuItem openFileItem;
 	private JMenuItem saveAsCompressedItem;
 	private JMenuItem saveSolutionItem;
-	private JMenuItem setAlgoItem;
-	private JPanel menuPanel;
-	private JPanel activitiesPanel;
-	private MazeStage stage;
+	private JComboBox setAlgorithm;
+
+	private JPanel centerPanel;
+	private DrawMaze stage;
+
+	private JPanel bottomPanel;
 	private JButton findSolutionButton;
 	private JButton pointBeginingButton;
 	private JButton pointEndButton;
 	private JButton addIndirectPointButton;
-	private JPanel bottomPanel;
-	private JTextField xTextField;
-	private JTextField yTextField;
-	private JLabel yLabel;
-	private JLabel xLabel;
+
 	private AlgoChooserDialog algoDialog;
 
 	class AlgoChooserDialog extends JDialog{
 		private JPanel content;
-		public AlgoChooserDialog(JPanel parent){
+		public AlgoChooserDialog(JPanel parent) {
 			//nie wiem jak ustawić rodzica, może być potrzebny JFrame, który jest w MazeApp, można go np. umieścić w polu tej klasy głównej
 			super((Frame)null);
 			setSize(100,50);
@@ -36,143 +33,88 @@ public class MainView extends JPanel{
 			getRootPane().setContentPane(content);
 
 		}
-
-
-
-
-
-
 	}
 
 	public MainView(){
-		setLayout(new BorderLayout(0, 0));
+		super("Maze Solver");
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setSize(1000,700);
+		setLayout(new BorderLayout());
 
-		basePanel = new JPanel();
-		add(basePanel, BorderLayout.NORTH);
-		basePanel.setLayout(new BoxLayout(basePanel, BoxLayout.Y_AXIS));
-
-		initMenuPanel();
-		initActivitiesPanel();
-		initBottomPanel();
-		stage = new MazeStage();
-		add(stage, BorderLayout.CENTER);
-		algoDialog= new AlgoChooserDialog(this);
-
+		add(initTopPanel(), BorderLayout.NORTH);
+		add(initCenterPanel(), BorderLayout.CENTER);
+		add(initBottomPanel(), BorderLayout.SOUTH);
+		setVisible(true);
 
 	}
-	private void initMenuPanel(){
+	private JPanel initTopPanel() {
+
+		topPanel = new JPanel();
+		topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.X_AXIS));
+
 		menuBar = new JMenuBar();
 
-
 		fileMenu = new JMenu("Plik");
-		fileMenu.setHorizontalAlignment(SwingConstants.LEFT);
-		menuBar.add(fileMenu);
+		solutionMenu = new JMenu("Rozwiązanie");
+
+		JPanel topRightPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+		topRightPanel.setBackground(Color.LIGHT_GRAY);
+		setAlgorithm = new JComboBox(new String[]{"DFS", "BFS", "A*"});
+		setAlgorithm.setSelectedIndex(0);
+		topRightPanel.add(setAlgorithm);
 
 		openFileItem = new JMenuItem("Otwórz plik z labiryntem");
-		openFileItem.setHorizontalAlignment(SwingConstants.LEFT);
-		fileMenu.add(openFileItem);
-
-
-
 		saveAsCompressedItem = new JMenuItem("Zapisz labirynt jako plik skompresowany");
-		saveAsCompressedItem.setHorizontalAlignment(SwingConstants.LEFT);
-		fileMenu.add(saveAsCompressedItem);
-
-		solutionMenu = new JMenu("Rozwiązanie");
-		menuBar.add(solutionMenu);
-
 		saveSolutionItem = new JMenuItem("Zapisz rozwiązanie");
+
+		fileMenu.add(openFileItem);
+		fileMenu.add(saveAsCompressedItem);
 		solutionMenu.add(saveSolutionItem);
 
-		menuPanel = new JPanel();
-		basePanel.add(menuPanel);
-		menuPanel.setLayout(new GridLayout(0, 1, 0, 0));
-		menuPanel.add(menuBar);
+		menuBar.add(fileMenu);
+		menuBar.add(solutionMenu);
+		topPanel.add(menuBar);
+		topPanel.add(Box.createHorizontalGlue());
+		topPanel.setBackground(Color.LIGHT_GRAY);
+		topPanel.add(topRightPanel);
 
-		algorithmMenu = new JMenu("Algorytm");
-		menuBar.add(algorithmMenu);
-
-		setAlgoItem = new JMenuItem("Ustaw algorytm rozwiązujący");
-		algorithmMenu.add(setAlgoItem);
-
+		return topPanel;
 	}
-	private void initActivitiesPanel(){
+	private JPanel initCenterPanel(){
+		centerPanel = new JPanel();
+		centerPanel.setLayout(new BorderLayout());
 
-		activitiesPanel = new JPanel();
-		basePanel.add(activitiesPanel);
-		activitiesPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
+		stage = new DrawMaze();
+		centerPanel.add(stage, BorderLayout.CENTER);
 
+		return centerPanel;
+	}
 
+	private JPanel initBottomPanel(){
+		bottomPanel = new JPanel();
+		bottomPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
 
 		pointBeginingButton = new JButton("Wskaż początek");
-		activitiesPanel.add(pointBeginingButton);
-
 		pointEndButton = new JButton("Wskaż koniec");
-		activitiesPanel.add(pointEndButton);
-
 		addIndirectPointButton = new JButton("Dodaj punkt pośredni");
-		//activitiesPanel.add(addIndirectPointButton);
-
 		findSolutionButton = new JButton("Znajdź rozwiązanie");
-		activitiesPanel.add(findSolutionButton);
 
+		bottomPanel.add(pointBeginingButton);
+		bottomPanel.add(pointEndButton);
+		bottomPanel.add(addIndirectPointButton);
+		bottomPanel.add(findSolutionButton);
+		bottomPanel.setBackground(Color.LIGHT_GRAY);
 
-
+		return bottomPanel;
 	}
-
-	private void initBottomPanel(){
-		bottomPanel = new JPanel();
-		FlowLayout flowLayout = (FlowLayout) bottomPanel.getLayout();
-		flowLayout.setAlignment(FlowLayout.RIGHT);
-		add(bottomPanel, BorderLayout.SOUTH);
-
-		xLabel = new JLabel("X:");
-		bottomPanel.add(xLabel);
-
-		xTextField = new JTextField("0");
-		xTextField.setHorizontalAlignment(SwingConstants.CENTER);
-		bottomPanel.add(xTextField);
-		xTextField.setColumns(5);
-
-		yLabel = new JLabel("Y:");
-		bottomPanel.add(yLabel);
-
-		yTextField = new JTextField("0");
-		yTextField.setHorizontalAlignment(SwingConstants.CENTER);
-		bottomPanel.add(yTextField);
-		yTextField.setColumns(5);
-
-	}
-	public MazeStage getMazeStage(){
-
+	public DrawMaze getMazeStage(){
 		return stage;
 	}
 
 	AlgoChooserDialog getAlgoDialog(){
-		
 		return algoDialog;
 	}
-	public void addOpenFileListener(ActionListener listener){
-
-		openFileItem.addActionListener(listener);
-
-
-	}
-
-	public void addSaveCompressedListener(ActionListener listener){
-
-		saveAsCompressedItem.addActionListener(listener);
-
-	}
-
-	public void addSaveSolutionListener(ActionListener listener){
-
-		saveSolutionItem.addActionListener(listener);
-
-	}
-	public void addAlgoChooseListener(ActionListener listener){
-
-		setAlgoItem.addActionListener(listener);
-
+	public void addFileListener(ActionListener listener){
+		fileMenu.addActionListener(listener);
 	}
 }

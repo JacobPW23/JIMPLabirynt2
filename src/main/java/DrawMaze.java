@@ -9,11 +9,6 @@ public class MazeStage extends JPanel{
 	private Rectangle2D.Float [][] mazeFields;
 	private String mazePath;
 	public MazeStage(){
-
-
-
-
-
 	}
 
 	public void setMazePath(String path){
@@ -78,23 +73,12 @@ public class MazeStage extends JPanel{
 				else{
 
 					mazeFields[rowCounter][i]= new Rectangle2D.Float(ax,ay,wallSize,wallSize);
-
 				}
 				ax+=wallSize;
-
 			}
 			ax=xBegining;
 			ay+=wallSize;
 			rowCounter++;
-
-
 		}
-
-
-
 	}
-
-
-
-
 }
