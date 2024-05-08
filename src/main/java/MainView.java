@@ -21,6 +21,7 @@ public class MainView extends JFrame{
 	private JButton addIndirectPointButton;
 
 	private AlgoChooserDialog algoDialog;
+	private JScrollPane stageContainer;
 
 	class AlgoChooserDialog extends JDialog{
 		private JPanel content;
@@ -36,13 +37,21 @@ public class MainView extends JFrame{
 	}
 
 	public MainView(){
+
 		super("Maze Solver");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setSize(1000,700);
 		setLayout(new BorderLayout());
 
+		
+
+		/*basePanel = new JPanel();
+		add(basePanel, BorderLayout.NORTH);
+		basePanel.setLayout(new BoxLayout(basePanel, BoxLayout.Y_AXIS));
+		*/
 		add(initTopPanel(), BorderLayout.NORTH);
 		add(initCenterPanel(), BorderLayout.CENTER);
+		
 		add(initBottomPanel(), BorderLayout.SOUTH);
 		setVisible(true);
 
@@ -59,7 +68,7 @@ public class MainView extends JFrame{
 
 		JPanel topRightPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 		topRightPanel.setBackground(Color.LIGHT_GRAY);
-		setAlgorithm = new JComboBox(new String[]{"DFS", "BFS", "A*"});
+		setAlgorithm = new JComboBox<String>(new String[]{"DFS", "BFS", "A*"});
 		setAlgorithm.setSelectedIndex(0);
 		topRightPanel.add(setAlgorithm);
 
@@ -80,14 +89,17 @@ public class MainView extends JFrame{
 
 		return topPanel;
 	}
-	private JPanel initCenterPanel(){
-		centerPanel = new JPanel();
-		centerPanel.setLayout(new BorderLayout());
-
+	private JScrollPane initCenterPanel(){
+		stageContainer=new JScrollPane();
+		//stageContainer.setBorder(null);
+		stageContainer.setAlignmentX(SwingConstants.CENTER);
 		stage = new DrawMaze();
-		centerPanel.add(stage, BorderLayout.CENTER);
+		stageContainer.setViewportView(stage);
+		stageContainer.getViewport().setScrollMode(JViewport.BACKINGSTORE_SCROLL_MODE);
+		add(stageContainer, BorderLayout.CENTER);
+		
 
-		return centerPanel;
+		return stageContainer;
 	}
 
 	private JPanel initBottomPanel(){
@@ -109,6 +121,10 @@ public class MainView extends JFrame{
 	}
 	public DrawMaze getMazeStage(){
 		return stage;
+	}
+	public JScrollPane getStageContainer(){
+		return stageContainer;
+
 	}
 
 	AlgoChooserDialog getAlgoDialog(){
