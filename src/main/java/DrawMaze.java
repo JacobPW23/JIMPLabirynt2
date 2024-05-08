@@ -16,32 +16,22 @@ public class DrawMaze extends JPanel{
 		mazePath=path;
 	}
 
-
 	public String getMazePath(){
 
 		return mazePath;
 
 	}
 
-
 	@Override
 	public void paintComponent(Graphics g){
 		Graphics2D comp2D= (Graphics2D) g;
 		if(mazePath!=null){
-
-
 			this.mazeLines=MazeReader.readMaze(mazePath);
 			mazeFields= new Rectangle2D.Float[mazeLines.size()][mazeLines.get(0).length()];
 			drawMaze(comp2D);
 
 		}
-
-
-
-
 	}
-
-
 
 	private void drawMaze(Graphics2D comp2D){
 
@@ -55,7 +45,6 @@ public class DrawMaze extends JPanel{
 		float xBegining= (getSize().width-mazeLines.get(0).length()*wallSize)/2;
 		float yBegining= (getSize().height-mazeLines.size()*wallSize)/2;
 
-
 		float ay=yBegining;
 		float ax=xBegining;
 
@@ -63,15 +52,11 @@ public class DrawMaze extends JPanel{
 		while(it.hasNext()){
 			String line=it.next();
 			for(int i=0;i<line.length();i++){
-
 				if(line.charAt(i)=='X'){
-
 					mazeFields[rowCounter][i] = new Rectangle2D.Float(ax,ay,wallSize,wallSize);
-
 					comp2D.fill(mazeFields[rowCounter][i]);
 				}
 				else{
-
 					mazeFields[rowCounter][i]= new Rectangle2D.Float(ax,ay,wallSize,wallSize);
 				}
 				ax+=wallSize;

@@ -16,8 +16,8 @@ public class MainView extends JFrame{
 
 	private JPanel bottomPanel;
 	private JButton findSolutionButton;
-	private JButton pointBeginingButton;
-	private JButton pointEndButton;
+	private JButton startPointButton;
+	private JButton endPointButton;
 	private JButton addIndirectPointButton;
 
 	private AlgoChooserDialog algoDialog;
@@ -94,13 +94,13 @@ public class MainView extends JFrame{
 		bottomPanel = new JPanel();
 		bottomPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
 
-		pointBeginingButton = new JButton("Wskaż początek");
-		pointEndButton = new JButton("Wskaż koniec");
+		startPointButton = new JButton("Wskaż początek");
+		endPointButton = new JButton("Wskaż koniec");
 		addIndirectPointButton = new JButton("Dodaj punkt pośredni");
 		findSolutionButton = new JButton("Znajdź rozwiązanie");
 
-		bottomPanel.add(pointBeginingButton);
-		bottomPanel.add(pointEndButton);
+		bottomPanel.add(startPointButton);
+		bottomPanel.add(endPointButton);
 		bottomPanel.add(addIndirectPointButton);
 		bottomPanel.add(findSolutionButton);
 		bottomPanel.setBackground(Color.LIGHT_GRAY);
@@ -114,7 +114,13 @@ public class MainView extends JFrame{
 	AlgoChooserDialog getAlgoDialog(){
 		return algoDialog;
 	}
-	public void addFileListener(ActionListener listener){
-		fileMenu.addActionListener(listener);
+
+	public void addOpenFileListener(ActionListener listener){
+		openFileItem.addActionListener(listener);
+	}
+
+	public void addStartPointListener(ActionListener listener){
+		startPointButton.addActionListener(listener);
 	}
 }
+

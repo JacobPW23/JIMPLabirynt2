@@ -2,8 +2,8 @@ import javax.swing.*;
 
 public class MazeApp {
 	public static void main(String args[]){
-
-		MainView app = new MainView();
+		MainView view = new MainView();
+		Controller controller = new Controller(view);
 
 
 	}
