@@ -3,12 +3,12 @@ import java.awt.*;
 import java.util.Iterator;
 import java.util.ArrayList;
 import java.awt.geom.*;
-public class MazeStage extends JPanel{
+public class DrawMaze extends JPanel{
 
 	private ArrayList<String> mazeLines;
 	private Rectangle2D.Float [][] mazeFields;
 	private String mazePath;
-	public MazeStage(){
+	public DrawMaze(){
 	}
 
 	public void setMazePath(String path){
