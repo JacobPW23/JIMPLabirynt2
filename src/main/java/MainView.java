@@ -92,6 +92,8 @@ public class MainView extends JFrame{
 	private JScrollPane initCenterPanel(){
 		stageContainer=new JScrollPane();
 		//stageContainer.setBorder(null);
+		stageContainer.getVerticalScrollBar().setUnitIncrement(16);
+		
 		stageContainer.setAlignmentX(SwingConstants.CENTER);
 		stage = new DrawMaze();
 		stageContainer.setViewportView(stage);
