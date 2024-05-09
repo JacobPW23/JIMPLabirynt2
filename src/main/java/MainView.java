@@ -1,4 +1,5 @@
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionListener;
 public class MainView extends JFrame{
@@ -13,28 +14,17 @@ public class MainView extends JFrame{
 
 	private JPanel centerPanel;
 	private DrawMaze stage;
-
+	private JPanel basePanel;
 	private JPanel bottomPanel;
 	private JButton findSolutionButton;
 	private JButton startPointButton;
 	private JButton endPointButton;
 	private JButton addIndirectPointButton;
 
-	private AlgoChooserDialog algoDialog;
+
 	private JScrollPane stageContainer;
 
-	class AlgoChooserDialog extends JDialog{
-		private JPanel content;
-		public AlgoChooserDialog(JPanel parent) {
-			//nie wiem jak ustawić rodzica, może być potrzebny JFrame, który jest w MazeApp, można go np. umieścić w polu tej klasy głównej
-			super((Frame)null);
-			setSize(100,50);
-			content=new JPanel();
-			content.add(new JLabel("Hello Algo"));
-			getRootPane().setContentPane(content);
-
-		}
-	}
+	
 
 	public MainView(){
 
@@ -45,10 +35,6 @@ public class MainView extends JFrame{
 
 		
 
-		/*basePanel = new JPanel();
-		add(basePanel, BorderLayout.NORTH);
-		basePanel.setLayout(new BoxLayout(basePanel, BoxLayout.Y_AXIS));
-		*/
 		add(initTopPanel(), BorderLayout.NORTH);
 		add(initCenterPanel(), BorderLayout.CENTER);
 		
@@ -57,13 +43,15 @@ public class MainView extends JFrame{
 
 	}
 	private JPanel initTopPanel() {
-
+		basePanel = new JPanel();
+		basePanel.setLayout(new BoxLayout(basePanel, BoxLayout.Y_AXIS));
 		topPanel = new JPanel();
 		topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.X_AXIS));
 
 		menuBar = new JMenuBar();
-
+		
 		fileMenu = new JMenu("Plik");
+		
 		solutionMenu = new JMenu("Rozwiązanie");
 
 		JPanel topRightPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
@@ -87,9 +75,26 @@ public class MainView extends JFrame{
 		topPanel.setBackground(Color.LIGHT_GRAY);
 		topPanel.add(topRightPanel);
 
-		return topPanel;
+		basePanel.add(topPanel);
+		JPanel activittiesPanel = new JPanel();
+		activittiesPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
+
+		startPointButton = new JButton("Wskaż początek");
+		endPointButton = new JButton("Wskaż koniec");
+		addIndirectPointButton = new JButton("Dodaj punkt pośredni");
+		findSolutionButton = new JButton("Znajdź rozwiązanie");
+
+		activittiesPanel.add(startPointButton);
+		activittiesPanel.add(endPointButton);
+		//activittiesPanel.add(addIndirectPointButton);
+		activittiesPanel.add(findSolutionButton);
+		activittiesPanel.setBackground(Color.LIGHT_GRAY);
+		basePanel.add(activittiesPanel);
+		return basePanel;
+
 	}
 	private JScrollPane initCenterPanel(){
+		
 		stageContainer=new JScrollPane();
 		//stageContainer.setBorder(null);
 		stageContainer.getVerticalScrollBar().setUnitIncrement(16);
@@ -106,19 +111,15 @@ public class MainView extends JFrame{
 
 	private JPanel initBottomPanel(){
 		bottomPanel = new JPanel();
-		bottomPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
-
-		startPointButton = new JButton("Wskaż początek");
-		endPointButton = new JButton("Wskaż koniec");
-		addIndirectPointButton = new JButton("Dodaj punkt pośredni");
-		findSolutionButton = new JButton("Znajdź rozwiązanie");
-
-		bottomPanel.add(startPointButton);
-		bottomPanel.add(endPointButton);
-		bottomPanel.add(addIndirectPointButton);
-		bottomPanel.add(findSolutionButton);
-		bottomPanel.setBackground(Color.LIGHT_GRAY);
-
+		bottomPanel.setLayout( new FlowLayout(FlowLayout.RIGHT));
+		JLabel pathModeLabel = new JLabel ("Algorytm: Dowolna ścieżka");
+		pathModeLabel.setBorder(new EmptyBorder(0,10,0,10));
+		bottomPanel.add(pathModeLabel);
+		JLabel xCordinateLabel= new JLabel("X: 0");
+		JLabel yCordinateLabel = new JLabel ("Y: 0");
+		bottomPanel.add(xCordinateLabel);
+		bottomPanel.add(yCordinateLabel);
+		
 		return bottomPanel;
 	}
 	public DrawMaze getMazeStage(){
@@ -129,9 +130,7 @@ public class MainView extends JFrame{
 
 	}
 
-	AlgoChooserDialog getAlgoDialog(){
-		return algoDialog;
-	}
+	
 
 	public void addOpenFileListener(ActionListener listener){
 		openFileItem.addActionListener(listener);
