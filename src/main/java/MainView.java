@@ -2,6 +2,8 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseListener;
 public class MainView extends JFrame{
 	private JPanel topPanel;
 	private JMenuBar menuBar;
@@ -20,7 +22,9 @@ public class MainView extends JFrame{
 	private JButton startPointButton;
 	private JButton endPointButton;
 	private JButton addIndirectPointButton;
-
+	private JLabel xCordinateLabel;
+	private JLabel yCordinateLabel;
+	private JLabel pathModeLabel;
 
 	private JScrollPane stageContainer;
 
@@ -112,11 +116,13 @@ public class MainView extends JFrame{
 	private JPanel initBottomPanel(){
 		bottomPanel = new JPanel();
 		bottomPanel.setLayout( new FlowLayout(FlowLayout.RIGHT));
-		JLabel pathModeLabel = new JLabel ("Algorytm: Dowolna ścieżka");
+		pathModeLabel = new JLabel ("Algorytm: Dowolna ścieżka");
 		pathModeLabel.setBorder(new EmptyBorder(0,10,0,10));
 		bottomPanel.add(pathModeLabel);
-		JLabel xCordinateLabel= new JLabel("X: 0");
-		JLabel yCordinateLabel = new JLabel ("Y: 0");
+		xCordinateLabel= new JLabel("X: -");
+		yCordinateLabel = new JLabel ("Y: -");
+		xCordinateLabel.setPreferredSize(new Dimension(60,14));
+		yCordinateLabel.setPreferredSize(new Dimension(60,14));
 		bottomPanel.add(xCordinateLabel);
 		bottomPanel.add(yCordinateLabel);
 		
@@ -130,6 +136,13 @@ public class MainView extends JFrame{
 
 	}
 
+	public JLabel getXLabel(){
+		return xCordinateLabel;
+	}
+
+	public JLabel getYLabel(){
+		return yCordinateLabel;
+	}
 	
 
 	public void addOpenFileListener(ActionListener listener){
@@ -139,5 +152,15 @@ public class MainView extends JFrame{
 	public void addStartPointListener(ActionListener listener){
 		startPointButton.addActionListener(listener);
 	}
+	public void addOnMazeMouseMovedListener(MouseAdapter listener){
+
+		stage.addMouseMotionListener(listener);
+	}
+
+	public void addOnMazeMouseExitedListener(MouseListener listener){
+
+		stage.addMouseListener(listener);
+	}
+
 }
 
