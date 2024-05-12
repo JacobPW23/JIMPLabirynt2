@@ -4,13 +4,13 @@ import java.awt.*;
 import java.util.Iterator;
 import java.util.ArrayList;
 import java.awt.geom.*;
-public class DrawMaze extends JPanel{
+public class MazePanel extends JPanel{
 
 	private ArrayList<String> mazeLines;
 	private Rectangle2D.Float [][] mazeFields;
 	private String mazePath;
 	private Dimension size;
-	public DrawMaze(){
+	public MazePanel(){
 		size=getPreferredSize();
 
 

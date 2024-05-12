@@ -15,7 +15,7 @@ public class MainView extends JFrame{
 	private JComboBox setAlgorithm;
 
 	private JPanel centerPanel;
-	private DrawMaze stage;
+	private MazePanel stage;
 	private JPanel basePanel;
 	private JPanel bottomPanel;
 	private JButton findSolutionButton;
@@ -104,7 +104,7 @@ public class MainView extends JFrame{
 		stageContainer.getVerticalScrollBar().setUnitIncrement(16);
 		
 		stageContainer.setAlignmentX(SwingConstants.CENTER);
-		stage = new DrawMaze();
+		stage = new MazePanel();
 		stageContainer.setViewportView(stage);
 		stageContainer.getViewport().setScrollMode(JViewport.BACKINGSTORE_SCROLL_MODE);
 		add(stageContainer, BorderLayout.CENTER);
@@ -128,7 +128,7 @@ public class MainView extends JFrame{
 		
 		return bottomPanel;
 	}
-	public DrawMaze getMazeStage(){
+	public MazePanel getMazeStage(){
 		return stage;
 	}
 	public JScrollPane getStageContainer(){
