@@ -4,6 +4,7 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseListener;
+import java.awt.event.KeyListener;
 public class MainView extends JFrame{
 	private JPanel topPanel;
 	private JMenuBar menuBar;
@@ -43,6 +44,8 @@ public class MainView extends JFrame{
 		add(initCenterPanel(), BorderLayout.CENTER);
 		
 		add(initBottomPanel(), BorderLayout.SOUTH);
+		setFocusable(true);
+        requestFocusInWindow();
 		setVisible(true);
 
 	}
@@ -145,6 +148,21 @@ public class MainView extends JFrame{
 	}
 	
 
+	public void lockPointButtons(){
+		startPointButton.setEnabled(false);
+		endPointButton.setEnabled(false);
+		findSolutionButton.setEnabled(false);
+	}
+
+
+	public void unlockPointButtons(){
+		startPointButton.setEnabled(true);
+		endPointButton.setEnabled(true);
+		findSolutionButton.setEnabled(true);
+
+	}
+
+
 	public void addOpenFileListener(ActionListener listener){
 		openFileItem.addActionListener(listener);
 	}
@@ -162,5 +180,14 @@ public class MainView extends JFrame{
 		stage.addMouseListener(listener);
 	}
 
+	public void addPointingModeEscapeListener(KeyListener listener){
+
+		addKeyListener(listener);
+	}
+
+	public void addEndPointListener(ActionListener listener){
+
+		endPointButton.addActionListener(listener);
+	}
 }
 
