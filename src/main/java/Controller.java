@@ -25,7 +25,7 @@ class Controller{
 
 			public void updatePointer(int x,int y){
 				if(view.getMazeStage().getPointingMode()!=MazePanel.NO_POINTING_MODE){
-					view.getMazeStage().hilightAt(x,y);
+					view.getMazeStage().highlightAt(x,y);
 					
 					//System.out.print(x+","+y+"\n");
 					
@@ -34,7 +34,7 @@ class Controller{
 
 
 			public void clearPointer(){
-				view.getMazeStage().hilightAt(-1,-1);
+				view.getMazeStage().highlightAt(-1,-1);
 				view.getMazeStage().repaint();
 			}
 		}
@@ -57,6 +57,7 @@ class Controller{
 		view.addOpenFileListener(e -> openFile());
 		view.addStartPointListener(e -> setStartPoint());
 		view.addEndPointListener(e-> setEndPoint());
+		view.addAlgoChangeListener(e-> updatelgoDescription());
 
 		view.addOnMazeMouseMovedListener(new MazeMotionAdapter(view){
 		
@@ -64,8 +65,7 @@ class Controller{
 			@Override
 			public void mouseMoved(MouseEvent e){
 				
-				view.getXLabel().setText("X: "+e.getX());
-				view.getYLabel().setText("Y: "+e.getY());
+				view.setCurrentCordinates(e.getY(),e.getX());
 				updatePointer(e.getY(),e.getX());
 				
 			}
@@ -80,8 +80,7 @@ class Controller{
 			@Override
 			public void mouseExited(MouseEvent e){
 
-				view.getXLabel().setText("X: -");
-				view.getYLabel().setText("Y: -");
+				view.setNoCordinates();
 				clearPointer();
 			}
 		});
@@ -94,7 +93,7 @@ class Controller{
 					if(e.getKeyChar()==27){
 						
 						view.getMazeStage().setPointingMode(MazePanel.NO_POINTING_MODE);
-						view.getMazeStage().hilightAt(-1,-1);
+						view.getMazeStage().highlightAt(-1,-1);
 						view.unlockPointButtons();
 						
 					}
@@ -144,5 +143,8 @@ class Controller{
 
 	}
 
+	public void updatelgoDescription(){
+		view.setAlgoDescription();
+	}
 
 }

@@ -5,7 +5,11 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseListener;
 import java.awt.event.KeyListener;
+import java.beans.PropertyChangeListener;
 public class MainView extends JFrame{
+
+	public final static String SHORTEST_PATH="Algorytm: Najkrótsza ścieżka";
+	public final static String ANY_PATH="Algorytm: Dowolna ścieżka";
 	private JPanel topPanel;
 	private JMenuBar menuBar;
 	private JMenu fileMenu;
@@ -147,6 +151,26 @@ public class MainView extends JFrame{
 		return yCordinateLabel;
 	}
 	
+	public void setCurrentCordinates(int y,int x){
+			int row=(y-stage.getDrawingYBegining())/10;
+			int column = (x-stage.getDrawingXBegining())/10;
+
+			Dimension size=stage.getMazeSize();
+			if(row>=0 && row<size.getHeight() && column>=0 && column<size.getWidth()){
+				xCordinateLabel.setText("X: "+column);
+				yCordinateLabel.setText("Y: "+row);
+
+			}
+			else{
+				setNoCordinates();
+			}
+		
+	}
+
+	public void setNoCordinates(){
+		xCordinateLabel.setText("X: -");
+		yCordinateLabel.setText("Y: -");
+	}
 
 	public void lockPointButtons(){
 		startPointButton.setEnabled(false);
@@ -162,6 +186,15 @@ public class MainView extends JFrame{
 
 	}
 
+	public void setAlgoDescription(){
+		String description="";
+		switch(setAlgorithm.getSelectedIndex()){
+			case 0: description=ANY_PATH;break;
+			case 1: description=ANY_PATH;break;
+			case 2: description=SHORTEST_PATH;break;
+		}
+		pathModeLabel.setText(description);
+	}
 
 	public void addOpenFileListener(ActionListener listener){
 		openFileItem.addActionListener(listener);
@@ -188,6 +221,10 @@ public class MainView extends JFrame{
 	public void addEndPointListener(ActionListener listener){
 
 		endPointButton.addActionListener(listener);
+	}
+
+	public void addAlgoChangeListener(PropertyChangeListener listener){
+		setAlgorithm.addPropertyChangeListener(listener);
 	}
 }
 

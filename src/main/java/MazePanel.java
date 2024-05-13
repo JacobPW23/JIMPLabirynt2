@@ -56,6 +56,8 @@ public class MazePanel extends JPanel{
 			this.shape=shape;
 		}
 
+		
+
 	}
 	public MazePanel(){
 		size=getPreferredSize();
@@ -73,11 +75,11 @@ public class MazePanel extends JPanel{
 
 	}
 
-	public void hilightAt(int row,int cloumn){
-		pointedFieldColumn=cloumn;
+	public void highlightAt(int row,int column){
+		pointedFieldColumn=column;
 		pointedFieldRow=row;
 
-		if(cloumn<0 || row <0)
+		if(column<0 || row <0)
 		repaint();
 		try{
 			if(mazeFields[(pointedFieldRow-drawingYBegining)/10][(pointedFieldColumn-drawingXBegining)/10 ].getColor().equals(corridorColor)){
@@ -119,8 +121,23 @@ public class MazePanel extends JPanel{
 		return POINTING_MODE;
 	}
 
+	public int getDrawingXBegining(){
 
+		return drawingXBegining;
+	}
+	public int getDrawingYBegining(){
+		return drawingYBegining;
+	}
 
+	public Dimension getMazeSize(){
+
+			if(mazeLines==null){
+				return new Dimension(0,0);
+			}
+			else{
+				return new Dimension(mazeFields.length,mazeFields[0].length);
+			}
+	}
 
 	@Override
 	public void paintComponent(Graphics g){
