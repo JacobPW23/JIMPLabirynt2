@@ -23,6 +23,22 @@ class Controller{
 				
 			}
 
+
+			@Override
+			public void mouseMoved(MouseEvent e){
+				
+				view.setCurrentCordinates(e.getY(),e.getX());
+				updatePointer(e.getY(),e.getX());
+				
+			}
+
+
+			@Override
+			public void mouseExited(MouseEvent e){
+
+				view.setNoCordinates();
+				clearPointer();
+			}
 			public void updatePointer(int x,int y){
 				if(view.getMazeStage().getPointingMode()!=MazePanel.NO_POINTING_MODE){
 					view.getMazeStage().highlightAt(x,y);
@@ -48,8 +64,21 @@ class Controller{
 				this.view=view;
 				
 			}
+			@Override
+			public void keyTyped(KeyEvent e){
+				
+				if(e.getKeyChar()==27){
+						
+						view.getMazeStage().setPointingMode(MazePanel.NO_POINTING_MODE);
+						view.getMazeStage().highlightAt(-1,-1);
+						view.unlockPointButtons();
+						
+					}
 
+			}
 		}
+
+
 	public Controller(MainView view){
 
 		
@@ -59,48 +88,11 @@ class Controller{
 		view.addEndPointListener(e-> setEndPoint());
 		view.addAlgoChangeListener(e-> updatelgoDescription());
 
-		view.addOnMazeMouseMovedListener(new MazeMotionAdapter(view){
+		view.addOnMazeMouseMovedListener(new MazeMotionAdapter(view));
 		
-			
-			@Override
-			public void mouseMoved(MouseEvent e){
-				
-				view.setCurrentCordinates(e.getY(),e.getX());
-				updatePointer(e.getY(),e.getX());
-				
-			}
-			
+		view.addOnMazeMouseExitedListener(new MazeMotionAdapter(view));
 
-
-		});
-
-		view.addOnMazeMouseExitedListener(new MazeMotionAdapter(view){
-
-
-			@Override
-			public void mouseExited(MouseEvent e){
-
-				view.setNoCordinates();
-				clearPointer();
-			}
-		});
-
-		view.addPointingModeEscapeListener(new MazeKeyAdapter(view){
-
-			@Override
-			public void keyTyped(KeyEvent e){
-				
-					if(e.getKeyChar()==27){
-						
-						view.getMazeStage().setPointingMode(MazePanel.NO_POINTING_MODE);
-						view.getMazeStage().highlightAt(-1,-1);
-						view.unlockPointButtons();
-						
-					}
-
-			}
-
-		});
+		view.addPointingModeEscapeListener(new MazeKeyAdapter(view));
 	}
 
 	private void openFile(){
