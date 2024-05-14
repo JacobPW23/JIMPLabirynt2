@@ -5,7 +5,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseListener;
 import java.awt.event.KeyListener;
-import java.beans.PropertyChangeListener;
+import java.awt.event.ItemListener;
 public class MainView extends JFrame{
 
 	public final static String SHORTEST_PATH="Algorytm: Najkrótsza ścieżka";
@@ -223,8 +223,8 @@ public class MainView extends JFrame{
 		endPointButton.addActionListener(listener);
 	}
 
-	public void addAlgoChangeListener(PropertyChangeListener listener){
-		setAlgorithm.addPropertyChangeListener(listener);
+	public void addAlgoChangeListener(ItemListener listener){
+		setAlgorithm.addItemListener(listener);
 	}
 }
 

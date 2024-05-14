@@ -55,8 +55,8 @@ class Controller{
 			}
 		}
 
-		class MazeKeyAdapter extends KeyAdapter{
-				private MainView view;
+	class MazeKeyAdapter extends KeyAdapter{
+		private MainView view;
 			
 
 
