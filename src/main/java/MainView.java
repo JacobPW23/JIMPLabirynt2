@@ -2,7 +2,14 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseListener;
+import java.awt.event.KeyListener;
+import java.awt.event.ItemListener;
 public class MainView extends JFrame{
+
+	public final static String SHORTEST_PATH="Algorytm: Najkrótsza ścieżka";
+	public final static String ANY_PATH="Algorytm: Dowolna ścieżka";
 	private JPanel topPanel;
 	private JMenuBar menuBar;
 	private JMenu fileMenu;
@@ -13,14 +20,16 @@ public class MainView extends JFrame{
 	private JComboBox setAlgorithm;
 
 	private JPanel centerPanel;
-	private DrawMaze stage;
+	private MazePanel stage;
 	private JPanel basePanel;
 	private JPanel bottomPanel;
 	private JButton findSolutionButton;
 	private JButton startPointButton;
 	private JButton endPointButton;
 	private JButton addIndirectPointButton;
-
+	private JLabel xCordinateLabel;
+	private JLabel yCordinateLabel;
+	private JLabel pathModeLabel;
 
 	private JScrollPane stageContainer;
 
@@ -39,6 +48,8 @@ public class MainView extends JFrame{
 		add(initCenterPanel(), BorderLayout.CENTER);
 		
 		add(initBottomPanel(), BorderLayout.SOUTH);
+		setFocusable(true);
+        requestFocusInWindow();
 		setVisible(true);
 
 	}
@@ -100,7 +111,7 @@ public class MainView extends JFrame{
 		stageContainer.getVerticalScrollBar().setUnitIncrement(16);
 		
 		stageContainer.setAlignmentX(SwingConstants.CENTER);
-		stage = new DrawMaze();
+		stage = new MazePanel();
 		stageContainer.setViewportView(stage);
 		stageContainer.getViewport().setScrollMode(JViewport.BACKINGSTORE_SCROLL_MODE);
 		add(stageContainer, BorderLayout.CENTER);
@@ -112,17 +123,19 @@ public class MainView extends JFrame{
 	private JPanel initBottomPanel(){
 		bottomPanel = new JPanel();
 		bottomPanel.setLayout( new FlowLayout(FlowLayout.RIGHT));
-		JLabel pathModeLabel = new JLabel ("Algorytm: Dowolna ścieżka");
+		pathModeLabel = new JLabel ("Algorytm: Dowolna ścieżka");
 		pathModeLabel.setBorder(new EmptyBorder(0,10,0,10));
 		bottomPanel.add(pathModeLabel);
-		JLabel xCordinateLabel= new JLabel("X: 0");
-		JLabel yCordinateLabel = new JLabel ("Y: 0");
+		xCordinateLabel= new JLabel("X: -");
+		yCordinateLabel = new JLabel ("Y: -");
+		xCordinateLabel.setPreferredSize(new Dimension(60,14));
+		yCordinateLabel.setPreferredSize(new Dimension(60,14));
 		bottomPanel.add(xCordinateLabel);
 		bottomPanel.add(yCordinateLabel);
 		
 		return bottomPanel;
 	}
-	public DrawMaze getMazeStage(){
+	public MazePanel getMazeStage(){
 		return stage;
 	}
 	public JScrollPane getStageContainer(){
@@ -130,7 +143,58 @@ public class MainView extends JFrame{
 
 	}
 
+	public JLabel getXLabel(){
+		return xCordinateLabel;
+	}
+
+	public JLabel getYLabel(){
+		return yCordinateLabel;
+	}
 	
+	public void setCurrentCordinates(int y,int x){
+			int row=(y-stage.getDrawingYBegining())/10;
+			int column = (x-stage.getDrawingXBegining())/10;
+
+			Dimension size=stage.getMazeSize();
+			if(row>=0 && row<size.getHeight() && column>=0 && column<size.getWidth()){
+				xCordinateLabel.setText("X: "+column);
+				yCordinateLabel.setText("Y: "+row);
+
+			}
+			else{
+				setNoCordinates();
+			}
+		
+	}
+
+	public void setNoCordinates(){
+		xCordinateLabel.setText("X: -");
+		yCordinateLabel.setText("Y: -");
+	}
+
+	public void lockPointButtons(){
+		startPointButton.setEnabled(false);
+		endPointButton.setEnabled(false);
+		findSolutionButton.setEnabled(false);
+	}
+
+
+	public void unlockPointButtons(){
+		startPointButton.setEnabled(true);
+		endPointButton.setEnabled(true);
+		findSolutionButton.setEnabled(true);
+
+	}
+
+	public void setAlgoDescription(){
+		String description="";
+		switch(setAlgorithm.getSelectedIndex()){
+			case 0: description=ANY_PATH;break;
+			case 1: description=ANY_PATH;break;
+			case 2: description=SHORTEST_PATH;break;
+		}
+		pathModeLabel.setText(description);
+	}
 
 	public void addOpenFileListener(ActionListener listener){
 		openFileItem.addActionListener(listener);
@@ -138,6 +202,29 @@ public class MainView extends JFrame{
 
 	public void addStartPointListener(ActionListener listener){
 		startPointButton.addActionListener(listener);
+	}
+	public void addOnMazeMouseMovedListener(MouseAdapter listener){
+
+		stage.addMouseMotionListener(listener);
+	}
+
+	public void addOnMazeMouseExitedListener(MouseListener listener){
+
+		stage.addMouseListener(listener);
+	}
+
+	public void addPointingModeEscapeListener(KeyListener listener){
+
+		addKeyListener(listener);
+	}
+
+	public void addEndPointListener(ActionListener listener){
+
+		endPointButton.addActionListener(listener);
+	}
+
+	public void addAlgoChangeListener(ItemListener listener){
+		setAlgorithm.addItemListener(listener);
 	}
 }
 
