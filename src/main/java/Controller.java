@@ -13,6 +13,10 @@ import java.awt.event.KeyEvent;
 
 class Controller{
 	private MainView view;
+	private MazeReader reader;
+
+
+
 	class MazeMotionAdapter extends MouseAdapter{
 			private MainView view;
 			
@@ -50,8 +54,8 @@ class Controller{
 
 
 			public void clearPointer(){
-				view.getMazeStage().highlightAt(-1,-1);
-				view.getMazeStage().repaint();
+				view.getMazeStage().clearHighLighted();
+				//view.getMazeStage().repaint();
 			}
 		}
 
@@ -70,7 +74,7 @@ class Controller{
 				if(e.getKeyChar()==27){
 						
 						view.getMazeStage().setPointingMode(MazePanel.NO_POINTING_MODE);
-						view.getMazeStage().highlightAt(-1,-1);
+						view.getMazeStage().clearHighLighted();
 						view.unlockPointButtons();
 						
 					}
@@ -83,6 +87,7 @@ class Controller{
 
 		
 		this.view =view;
+		reader= new MazeReader();
 		view.addOpenFileListener(e -> openFile());
 		view.addStartPointListener(e -> setStartPoint());
 		view.addEndPointListener(e-> setEndPoint());
@@ -105,8 +110,8 @@ class Controller{
 
 			if(val==JFileChooser.APPROVE_OPTION){
 
-    			view.getMazeStage().setMazeLines(MazeReader.readMaze(fileDialog.getSelectedFile().getAbsolutePath()));
-				view.getMazeStage().paintComponent(view.getMazeStage().getGraphics());
+    			view.getMazeStage().setMaze(reader.readMaze(fileDialog.getSelectedFile().getAbsolutePath()));
+				//view.getMazeStage().paintComponent(view.getMazeStage().getGraphics());
 				view.getStageContainer().revalidate();
 				view.getStageContainer().repaint();
 			}
@@ -116,7 +121,7 @@ class Controller{
 
 		}
 		catch(Exception ex){
-
+			System.out.print("Wystąpił błąd podczas wczytywania pliku");
 		}
 
 	}

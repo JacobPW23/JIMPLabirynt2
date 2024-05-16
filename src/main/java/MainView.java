@@ -151,9 +151,9 @@ public class MainView extends JFrame{
 		return yCordinateLabel;
 	}
 	
-	public void setCurrentCordinates(int y,int x){
-			int row=(y-stage.getDrawingYBegining())/10;
-			int column = (x-stage.getDrawingXBegining())/10;
+	public void setCurrentCordinates(float y,float x){
+			int row=(int)(y-stage.getDrawingYBegining())/10;
+			int column = (int) (x-stage.getDrawingXBegining())/10;
 
 			Dimension size=stage.getMazeSize();
 			if(row>=0 && row<size.getHeight() && column>=0 && column<size.getWidth()){
