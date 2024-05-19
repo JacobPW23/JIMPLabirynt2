@@ -1,77 +1,62 @@
 import java.awt.geom.*;
-import javax.swing.*;
 import java.awt.*;
 
 
-public class MazeField{
+public class MazeField {
 
-		private Color color;
-        private Color highlightColor;
-		private Rectangle2D.Float shape;
-        public static int wallSize;
-        private float xBegining;
-        private float yBegining;
-        private Graphics2D g2D;
+    private Color color;
+    private final Color highlightColor=Color.RED;
+    private Rectangle2D.Float shape;
+    public static final int wallSize = 10;
+    private float xBeginning;
+    private float yBeginning;
+    private boolean isHighlighted = false;
+    private char type;
 
-		public MazeField(char x,int i,int j){
-				if(x=='X'){
-                    color=Color.BLACK;
-                }
-                else{
-                    color=Color.WHITE;
-                }
-                wallSize=10;
-                highlightColor=Color.red;
-				this.shape=new Rectangle2D.Float(i*wallSize,j*wallSize,wallSize,wallSize);
-                
-		}
-		
-		public Color getColor(){
-			return color;
-		}
-		public void setColor(Color color){
-			this.color=color;
-		}
+    public MazeField(char type, int i, int j) {
+        this.color = (type==' ') ? Color.WHITE : Color.BLACK;
+        this.type = type;
+        this.shape = new Rectangle2D.Float(i * wallSize, j * wallSize, wallSize, wallSize);
 
-		public Rectangle2D.Float getShape(){
-			return shape;
-		}
+    }
 
-		public void setShape(Rectangle2D.Float shape){
-			this.shape=shape;
-		}
-        public void draw(){
+    public boolean isPath() {
+        return type == ' ';
+    }
 
-            g2D.setColor(color);
-            g2D.fill(shape);
+    public void setHighlight(boolean isHighlighted) {
+        this.isHighlighted = isHighlighted;
+    }
+
+    public void draw(Graphics2D g2D) {
+        if (isHighlighted) {
+            g2D.setColor(highlightColor); // Assume highlightColor is defined
+        } else {
+            g2D.setColor(color); // Assume color is defined
         }
+        g2D.fill(shape);
+    }
 
-        public void setBegining(float xBegining, float yBegining)
-        {
-            this.xBegining=xBegining;
-            this.yBegining=yBegining;
-            shape.x+=xBegining;
-            shape.y+=yBegining;
+    public void setBeginning(float xBeginning, float yBeginning) {
+        this.xBeginning = xBeginning;
+        this.yBeginning = yBeginning;
+        shape.x += xBeginning;
+        shape.y += yBeginning;
+    }
 
+    public Color getColor() {
+        return color;
+    }
 
-        }
+    public void setColor(Color color) {
+        this.color = color;
+    }
 
+    public Rectangle2D.Float getShape() {
+        return shape;
+    }
 
-        public void setGraphics(Graphics2D g){
-            g2D=g;
-        
-        }
-        public void highlight(){
-            
-            g2D.setColor(highlightColor);
-            g2D.fill(shape);
-        }
-
-        public void clearHighlight(){
-
-            g2D.setColor(color);
-            g2D.fill(shape);
-        }
-		
-
-	}
+    public void setShape(Rectangle2D.Float shape) {
+        this.shape = shape;
+    }
+}
