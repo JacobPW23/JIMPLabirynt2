@@ -12,7 +12,6 @@ public class Maze {
     public ArrayList<String> lines;
 
     public Maze(ArrayList<String> lines) {
-
         this.lines = lines;
         rowNumber = lines.size();
         columnNumber = lines.get(0).length();
@@ -25,12 +24,9 @@ public class Maze {
             String line = lines.get(j);
             for (int i = 0; i < line.length(); i++)
                 fields.add(new MazeField(line.charAt(i), i, j));
-
-
         }
         xBeginning = 0;
         yBeginning = 0;
-
     }
 
     public int getColumnsNumber() {
@@ -42,25 +38,13 @@ public class Maze {
         return this.rowNumber;
     }
 
-    public void setBegining(float xBegining, float yBegining) {
-        this.xBeginning = xBegining;
-        this.yBeginning = yBegining;
+    public void setBeginning(float xBeginning, float yBeginning) {
+        this.xBeginning = xBeginning;
+        this.yBeginning = yBeginning;
 
-        float x = xBegining;
-        float y = yBegining;
-        for (int i = 0; i < fields.size(); i++) {
-
-        /*if(x%nOfcolumns==0){
-            x=xBegining;
-            y+=MazeField.wallSize;
+        for (MazeField field : fields) {
+            field.setBeginning(xBeginning, yBeginning);
         }
-        */
-            fields.get(i).setBeginning(x, y);
-            //x+=MazeField.wallSize;
-
-        }
-
-
     }
 
     public void draw(Graphics2D g) {
@@ -73,11 +57,9 @@ public class Maze {
 
         int column = (int)((x - xBeginning) / MazeField.wallSize);
         int row = (int)((y - yBeginning) / MazeField.wallSize);
-        if (column < 0 || column >= columnNumber || row < 0 || row >= rowNumber) {
+        if (column < 0 || column >= columnNumber || row < 0 || row >= rowNumber)
             return null;
-        }
         return fields.get(row * columnNumber + column);
-
     }
 
     public ArrayList<MazeField> getFields() {
