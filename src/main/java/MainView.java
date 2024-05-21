@@ -28,8 +28,8 @@ public class MainView extends JFrame {
     private JButton startPointButton;
     private JButton endPointButton;
     private JButton addIndirectPointButton;
-    private JLabel xCordinateLabel;
-    private JLabel yCordinateLabel;
+    private JLabel xCoordinateLabel;
+    private JLabel yCoordinateLabel;
     private JLabel pathModeLabel;
 
     private JScrollPane stageContainer;
@@ -87,20 +87,20 @@ public class MainView extends JFrame {
         topPanel.add(topRightPanel);
 
         basePanel.add(topPanel);
-        JPanel activittiesPanel = new JPanel();
-        activittiesPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
+        JPanel activitiesPanel = new JPanel();
+        activitiesPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
 
         startPointButton = new JButton("Wskaż początek");
         endPointButton = new JButton("Wskaż koniec");
         addIndirectPointButton = new JButton("Dodaj punkt pośredni");
         findSolutionButton = new JButton("Znajdź rozwiązanie");
 
-        activittiesPanel.add(startPointButton);
-        activittiesPanel.add(endPointButton);
-        //activittiesPanel.add(addIndirectPointButton);
-        activittiesPanel.add(findSolutionButton);
-        activittiesPanel.setBackground(Color.LIGHT_GRAY);
-        basePanel.add(activittiesPanel);
+        activitiesPanel.add(startPointButton);
+        activitiesPanel.add(endPointButton);
+        //activitiesPanel.add(addIndirectPointButton);
+        activitiesPanel.add(findSolutionButton);
+        activitiesPanel.setBackground(Color.LIGHT_GRAY);
+        basePanel.add(activitiesPanel);
         return basePanel;
 
     }
@@ -127,12 +127,12 @@ public class MainView extends JFrame {
         pathModeLabel = new JLabel("Algorytm: Dowolna ścieżka");
         pathModeLabel.setBorder(new EmptyBorder(0, 10, 0, 10));
         bottomPanel.add(pathModeLabel);
-        xCordinateLabel = new JLabel("X: -");
-        yCordinateLabel = new JLabel("Y: -");
-        xCordinateLabel.setPreferredSize(new Dimension(60, 14));
-        yCordinateLabel.setPreferredSize(new Dimension(60, 14));
-        bottomPanel.add(xCordinateLabel);
-        bottomPanel.add(yCordinateLabel);
+        xCoordinateLabel = new JLabel("X: -");
+        yCoordinateLabel = new JLabel("Y: -");
+        xCoordinateLabel.setPreferredSize(new Dimension(60, 14));
+        yCoordinateLabel.setPreferredSize(new Dimension(60, 14));
+        bottomPanel.add(xCoordinateLabel);
+        bottomPanel.add(yCoordinateLabel);
 
         return bottomPanel;
     }
@@ -147,31 +147,31 @@ public class MainView extends JFrame {
     }
 
     public JLabel getXLabel() {
-        return xCordinateLabel;
+        return xCoordinateLabel;
     }
 
     public JLabel getYLabel() {
-        return yCordinateLabel;
+        return yCoordinateLabel;
     }
 
-    public void setCurrentCordinates(float y, float x) {
-        int row = (int) (y - stage.getDrawingYBegining()) / 10;
-        int column = (int) (x - stage.getDrawingXBegining()) / 10;
+    public void setCurrentCoordinates(float y, float x) {
+        int row = (int) (y - stage.getDrawingYBeginning()) / 10;
+        int column = (int) (x - stage.getDrawingXBeginning()) / 10;
 
         Dimension size = stage.getMazeSize();
         if (row >= 0 && row < size.getHeight() && column >= 0 && column < size.getWidth()) {
-            xCordinateLabel.setText("X: " + column);
-            yCordinateLabel.setText("Y: " + row);
+            xCoordinateLabel.setText("X: " + column);
+            yCoordinateLabel.setText("Y: " + row);
 
         } else {
-            setNoCordinates();
+            setNoCoordinates();
         }
 
     }
 
-    public void setNoCordinates() {
-        xCordinateLabel.setText("X: -");
-        yCordinateLabel.setText("Y: -");
+    public void setNoCoordinates() {
+        xCoordinateLabel.setText("X: -");
+        yCoordinateLabel.setText("Y: -");
     }
 
     public void lockPointButtons() {
