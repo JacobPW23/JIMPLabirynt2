@@ -154,10 +154,7 @@ public class Maze{
 				graph.establishAssociation(current,graph.getNodeAt(j+1,i));
 				graph.establishAssociation(current,graph.getNodeAt(j,i-1));
 				graph.establishAssociation(current,graph.getNodeAt(j,i+1));
-				graph.establishAssociation(graph.getNodeAt(j-1,i),current);
-				graph.establishAssociation(graph.getNodeAt(j+1,i),current);
-				graph.establishAssociation(graph.getNodeAt(j,i-1),current);
-				graph.establishAssociation(graph.getNodeAt(j,i+1),current);
+				
 			}
 		
 	}
