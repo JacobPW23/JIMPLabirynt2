@@ -10,11 +10,14 @@ import java.util.Iterator;
 public class MazeGraph{
 
     protected int nextNodeNumber = 0;
-    protected HashMap<Node, HashSet<Edge>> associationLists = new HashMap<>();
+    protected HashMap<Node, HashSet<Node>> associationLists = new HashMap<>();
     protected Node begining;
     protected Node end;
-    public HashSet<Edge> getAssociationList(Node n) {
-        HashSet<Edge> s = associationLists == null ? null : associationLists.get(n);
+
+
+
+    public HashSet<Node> getAssociationList(Node n) {
+        HashSet<Node> s = associationLists == null ? null : associationLists.get(n);
         return s == null ? new HashSet<>() : s;
     }
 
@@ -35,47 +38,30 @@ public class MazeGraph{
     }
 
        
-    public void addEdge(Node first, Node second) {
-        addEdge(first, second, 1.0);
-    }
-
     
-    public void addEdge(Node first, Node second, double weight) {
-        associationLists.get(first).add(new Edge(first, second, weight));
-        associationLists.get(second).add(new Edge(second, first, weight));
-    }
-
     public void addNode(Node x){
 
         if(!associationLists.containsKey(x)){
-            associationLists.put(x,new HashSet<Edge>());
+            associationLists.put(x,new HashSet<Node>());
             x.setNumber(nextNodeNumber++);
 
         }
     }
 
 
+    public void establishAssociation(Node a, Node b){
+        if(associationLists.containsKey(a) && associationLists.containsKey(b)){
+            associationLists.get(a).add(b);
+            associationLists.get(b).add(a);
+        }
+    }
 
     public int getNumNodes() {
         return associationLists == null ? 0 : associationLists.size();
     }
 
 
-   /* @Override
-    public String toString(){
-
-        String result= new String();
-        HashSet<Node> k=associationLists.keySet();
-        Iterator<Node> it = k.iterator();
-        while(it.hasNext()){
-            Node x=it.next();
-            result.concat(x.getLabel() + " : " + x.getXCoordinate() +  ", "  x.getYCoordinate() + "\n");
-            //result.concat("/t"+ )
-            
-        }
-        return result;
-    }
-    */
+  
 
    public void setBeginingNode(Node start){
 
@@ -96,43 +82,7 @@ public class MazeGraph{
         return end;
    }
 
-   public void injectNode(Node injected){
+   
 
-        Set<Node> k=associationLists.keySet();
-        if(!associationLists.containsKey(injected)){
-
-            addNode(injected);
-            Iterator<Node> kit=k.iterator();
-            while(kit.hasNext()){
-                Node n=kit.next();
-                if(n.isCollinear(injected)){
-                    HashSet<Edge> edges =getAssociationList(n);
-                    Iterator<Edge> eit=edges.iterator();
-                    while(eit.hasNext());
-                    {
-                        Edge someEdge=eit.next();
-                        //może troche niezrozumiały warunek-  wsztrzykujemy tylko, gdy injected leży pomiędzy węzłami
-                        if(someEdge.getSecondNode().getYCoordinate()>injected.getYCoordinate() 
-                        && someEdge.getFirstNode().getYCoordinate()<injected.getYCoordinate()
-                        || someEdge.getSecondNode().getXCoordinate()>injected.getXCoordinate()
-                        && someEdge.getFirstNode().getXCoordinate()<injected.getXCoordinate()){
-
-                            
-                           
-                            //addEdge(n,injected,n.distanceFrom(injected));
-                            //addEdge(someEdge.getSecondNode(),injected,injected.distanceFrom(someEdge.getSecondNode()));
-                            
-                            //edges.remove(someEdge); 
-                            //getAssociationList(someEdge.getSecondNode()).remove(someEdge);
-                            return;
-                        }
-                    }
-                }
-
-
-            }
-
-        }
-
-   }
+   
 }

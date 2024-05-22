@@ -19,6 +19,7 @@ public class Maze{
 	private Graphics2D g2D;
 	public ArrayList<String> lines;
 	private HashSet chracteristicCodes=new HashSet();
+
 	public Maze(ArrayList<String> lines){
 
 		this.lines=lines;
@@ -131,58 +132,66 @@ public class Maze{
 	public MazeGraph buildGraph(){
 
 		MazeGraph graph= new MazeGraph();
-		ArrayList<Node> buforred= new ArrayList<Node>();
+		createNodes(graph);
+		createAssociation(graph);
+		return graph;
+		
+	}
+
+	public void createAssociation(MazeGraph graph){
+		graph.establishAssociation(graph.getBeginingNode(),graph.getNodeAt(graph.getBeginingNode().getXCoordinate()+1,graph.getBeginingNode().getYCoordinate()));
+		graph.establishAssociation(graph.getEndNode(),graph.getNodeAt(graph.getEndNode().getXCoordinate()-1,graph.getEndNode().getYCoordinate()));
 		for(int i=1;i<lines.size()-1;i++){
 
 			String line=lines.get(i);
-
+			
+			
 			for(int j=1;j<line.length()-1;j++){
-				int verdict=mazeNode(i,j);
-				if(verdict!=NOT_NODE){
-					Node currentNode=new Node(j,i);
-					if(verdict==START_NODE)
-						graph.setBeginingNode(currentNode);
-					if(verdict==END_NODE)
-						graph.setEndNode(currentNode);
-					graph.addNode(currentNode);
 
+				//here it is tried to establish association with all possible neighboors N,E,W,S, establishAssociation method will do it whereever it is only possible;
+				Node current=graph.getNodeAt(j,i);
+				graph.establishAssociation(current,graph.getNodeAt(j-1,i));
+				graph.establishAssociation(current,graph.getNodeAt(j+1,i));
+				graph.establishAssociation(current,graph.getNodeAt(j,i-1));
+				graph.establishAssociation(current,graph.getNodeAt(j,i+1));
+				graph.establishAssociation(graph.getNodeAt(j-1,i),current);
+				graph.establishAssociation(graph.getNodeAt(j+1,i),current);
+				graph.establishAssociation(graph.getNodeAt(j,i-1),current);
+				graph.establishAssociation(graph.getNodeAt(j,i+1),current);
+			}
+		
+	}
+	}
 
-					//poziome dowiązanie
-					if(line.charAt(j-1)==' '){
-					
-						for(int k=0;k<buforred.size();k++){
-							Node tried=buforred.get(k);
-							if(tried.getYCoordinate()==i){
-								graph.addEdge(tried,currentNode,Math.abs(tried.getXCoordinate()-j));
-								if(lines.get(i+1).charAt((int)tried.getXCoordinate())!=' ')
-									buforred.remove(tried);
-								break;
-							}
+	private void createNodes(MazeGraph graph){
 
-						}
-					}
-					//pionowe dowiązanie
-					if (lines.get(i-1).charAt(j)==' '){
-						for(int k=0;k<buforred.size();k++){
-							Node tried=buforred.get(k);
-							if(tried.getXCoordinate()==j){
-								graph.addEdge(tried,currentNode,Math.abs(tried.getYCoordinate()-i));
-									buforred.remove(tried);
-								break;
-							}
-						}
+		for(int i=1;i<lines.size()-1;i++){
 
-					}
+			String line=lines.get(i);
+			int j=0;
+			if(line.charAt(j)=='P'){
+				
+				Node begin= new Node(j++,i);
+				graph.addNode(begin);
+				graph.setBeginingNode(begin);
+			}
+			for(;j<line.length()-1;j++){
 
+				if(line.charAt(j)==' '){
 
-					if(line.charAt(j+1)==' ' || lines.get(i+1).charAt(j)==' ')
-						buforred.add(0,currentNode);  
+						graph.addNode(new Node(j,i));
+
 				}
 			}
 
+			if(line.charAt(j)=='K'){
+				Node end =new Node(j,i);
+				graph.addNode(end);
+				graph.setEndNode(end);
+			}
+			
 		}
-		defaultBounds(graph);
-		return graph;
+
 	}
 
 	public void defaultBounds(MazeGraph g){
