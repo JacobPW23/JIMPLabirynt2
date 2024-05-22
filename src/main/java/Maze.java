@@ -10,11 +10,11 @@ public class Maze {
     public ArrayList<String> lines;
 
     public Maze(ArrayList<String> lines) {
+        if (lines.isEmpty())
+            return;
         this.lines = lines;
         rowNumber = lines.size();
         columnNumber = lines.get(0).length();
-        if (lines.isEmpty())
-            return;
 
         fields = new ArrayList<MazeField>();
         for (int j = 0; j < lines.size(); j++) {

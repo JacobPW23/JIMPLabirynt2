@@ -30,27 +30,28 @@ public class MazeReader {
             return null;
 
         }
-        //if(!validLines(mazeLines))
-        //return null;
+        if(!isFileValid(mazeLines)){
+            System.out.println("Wystąpił błąd: plik jest niepoprawny");
+            throw new IllegalArgumentException("Invalid file");
+        }
 
 
         return new Maze(mazeLines);
     }
 
-    private boolean validLines(ArrayList<String> mazeLines) {
-        if (mazeLines.size() == 0 || mazeLines.get(0).length() == 0)
+    private boolean isFileValid(ArrayList<String> mazeLines) {
+        if (mazeLines.isEmpty() || mazeLines.get(0).isEmpty())
             return false;
+        int lineLength = mazeLines.get(0).length();
         for (int j = 0; j < mazeLines.size(); j++) {
             String line = mazeLines.get(j);
+            if(line.length()!=lineLength)
+                return false;
             for (int i = 0; i < line.length(); i++) {
                 char testedElem = line.charAt(i);
-                if (testedElem != ' ' || testedElem != 'X' || testedElem != 'K' || testedElem != 'P')
-                    return false;
-                else if (testedElem == ' ' && (j == 0 || j == mazeLines.size() - 1))
+                if (testedElem != ' ' && testedElem != 'X' && testedElem != 'K' && testedElem != 'P')
                     return false;
             }
-            if (j > 0 && mazeLines.get(j).length() != mazeLines.get(j - 1).length())
-                return false;
         }
         return true;
     }
