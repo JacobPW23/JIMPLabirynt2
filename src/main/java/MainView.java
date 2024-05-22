@@ -45,7 +45,6 @@ public class MainView extends JFrame {
 
         add(initTopPanel(), BorderLayout.NORTH);
         add(initCenterPanel(), BorderLayout.CENTER);
-
         add(initBottomPanel(), BorderLayout.SOUTH);
         setFocusable(true);
         requestFocusInWindow();
@@ -106,7 +105,6 @@ public class MainView extends JFrame {
     }
 
     private JScrollPane initCenterPanel() {
-
         stageContainer = new JScrollPane();
         //stageContainer.setBorder(null);
         stageContainer.getVerticalScrollBar().setUnitIncrement(16);
@@ -116,7 +114,6 @@ public class MainView extends JFrame {
         stageContainer.setViewportView(stage);
         stageContainer.getViewport().setScrollMode(JViewport.BACKINGSTORE_SCROLL_MODE);
         add(stageContainer, BorderLayout.CENTER);
-
 
         return stageContainer;
     }
@@ -159,14 +156,13 @@ public class MainView extends JFrame {
         int column = (int) (x - stage.getDrawingXBeginning()) / 10;
 
         Dimension size = stage.getMazeSize();
+
         if (row >= 0 && row < size.getHeight() && column >= 0 && column < size.getWidth()) {
             xCoordinateLabel.setText("X: " + column);
             yCoordinateLabel.setText("Y: " + row);
-
         } else {
             setNoCoordinates();
         }
-
     }
 
     public void setNoCoordinates() {
@@ -189,18 +185,12 @@ public class MainView extends JFrame {
     }
 
     public void setAlgoDescription() {
-        String description = "";
-        switch (setAlgorithm.getSelectedIndex()) {
-            case 0:
-                description = ANY_PATH;
-                break;
-            case 1:
-                description = ANY_PATH;
-                break;
-            case 2:
-                description = SHORTEST_PATH;
-                break;
-        }
+        String description = switch (setAlgorithm.getSelectedIndex()) {
+            case 0 -> ANY_PATH;
+            case 1 -> ANY_PATH;
+            case 2 -> SHORTEST_PATH;
+            default -> "";
+        };
         pathModeLabel.setText(description);
     }
 

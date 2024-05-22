@@ -6,22 +6,19 @@ public class MazePanel extends JPanel {
 
     public final static int NO_POINTING_MODE = 0;
     public final static int START_POINTING_MODE = 1;
-    public final static int END_POINTING_MODE = 1;
+    public final static int END_POINTING_MODE = 2;
     private Maze maze;
-    private String mazePath;
     private Dimension size;
     private int pointedFieldRow;
     private int pointedFieldColumn;
     private int POINTING_MODE;
-    private float wallSize;
     private Color wallColor;
-    private Color corridorColor;
+    private Color pathColor;
     private Color solutionPathColor;
     private Color pointingColor;
-    private float drawingXBeginning;
-    private float drawingYBeginning;
+    private int drawingXBeginning;
+    private int drawingYBeginning;
     private MazeField previousHighlighted;
-
 
     public MazePanel() {
         size = getPreferredSize();
@@ -30,62 +27,54 @@ public class MazePanel extends JPanel {
         POINTING_MODE = NO_POINTING_MODE;
 
         wallColor = Color.BLACK;
-        corridorColor = Color.WHITE;
+        pathColor = Color.WHITE;
         pointingColor = Color.RED;
         solutionPathColor = Color.ORANGE;
         drawingXBeginning = 0;
         drawingYBeginning = 0;
     }
 
-    public void highlightAt(int column, int row) {
+    public void highlightAt(int x, int y) {
         clearHighlighted();
 
         if (maze != null) {
-            MazeField field = maze.getFieldAt(row, column);
+            int column = (x - drawingXBeginning) / MazeField.wallSize;
+            int row = (y - drawingYBeginning) / MazeField.wallSize;
+            MazeField field = maze.getFieldAt(column, row);
             if (field != null && field.isPath()) {
                 field.setHighlight(true);
                 previousHighlighted = field;
-                repaint();  // Request a repaint to reflect the highlight change
+                repaint();
             }
         }
-
     }
-
 
     public void clearHighlighted() {
         if (previousHighlighted != null) {
             previousHighlighted.setHighlight(false);
-            repaint();  // Request a repaint to clear the highlight
+            repaint();
             previousHighlighted = null;
         }
     }
 
-
     public void setMaze(Maze m) {
-
-        maze = m;
+        this.maze = m;
         size.setSize(maze.getColumnsNumber() * MazeField.wallSize, maze.getRowsNumber() * MazeField.wallSize);
         setPreferredSize(size);
 
-        //wycentrowanie labiryntu
-        drawingXBeginning = (getSize().width - maze.getColumnsNumber() * MazeField.wallSize) / 2;
-        drawingYBeginning = (getSize().height - maze.getRowsNumber() * MazeField.wallSize) / 2;
-        maze.setBegining(drawingXBeginning, drawingYBeginning);
+        revalidate();
         repaint();
-
     }
 
     public void setPointingMode(int mode) {
         POINTING_MODE = mode;
     }
 
-
     public int getPointingMode() {
         return POINTING_MODE;
     }
 
     public float getDrawingXBeginning() {
-
         return drawingXBeginning;
     }
 
@@ -94,7 +83,6 @@ public class MazePanel extends JPanel {
     }
 
     public Dimension getMazeSize() {
-
         if (maze == null) {
             return new Dimension(0, 0);
         } else {
@@ -106,10 +94,12 @@ public class MazePanel extends JPanel {
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2D = (Graphics2D) g;
+        if (maze != null) {
+            drawingXBeginning = (getWidth() - maze.getColumnsNumber() * MazeField.wallSize) / 2;
+            drawingYBeginning = (getHeight() - maze.getRowsNumber() * MazeField.wallSize) / 2;
 
-        if(maze!=null)
+            g2D.translate(drawingXBeginning, drawingYBeginning);
             maze.draw(g2D);
+        }
     }
-
 }
-

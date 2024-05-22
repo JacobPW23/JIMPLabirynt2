@@ -6,18 +6,19 @@ public class MazeField {
 
     private Color color;
     private final Color highlightColor=Color.RED;
+    private boolean isHighlighted = false;
     private Rectangle2D.Float shape;
     public static final int wallSize = 10;
-    private float xBeginning;
-    private float yBeginning;
-    private boolean isHighlighted = false;
+    private int row;
+    private int column;
     private char type;
 
     public MazeField(char type, int i, int j) {
         this.color = (type==' ') ? Color.WHITE : Color.BLACK;
         this.type = type;
+        this.row = i;
+        this.column = j;
         this.shape = new Rectangle2D.Float(i * wallSize, j * wallSize, wallSize, wallSize);
-
     }
 
     public boolean isPath() {
@@ -30,18 +31,11 @@ public class MazeField {
 
     public void draw(Graphics2D g2D) {
         if (isHighlighted) {
-            g2D.setColor(highlightColor); // Assume highlightColor is defined
+            g2D.setColor(highlightColor);
         } else {
-            g2D.setColor(color); // Assume color is defined
+            g2D.setColor(color);
         }
-        g2D.fill(shape);
-    }
-
-    public void setBeginning(float xBeginning, float yBeginning) {
-        this.xBeginning = xBeginning;
-        this.yBeginning = yBeginning;
-        shape.x += xBeginning;
-        shape.y += yBeginning;
+        g2D.fill(new Rectangle2D.Float(shape.x, shape.y, shape.width, shape.height));
     }
 
     public Color getColor() {
