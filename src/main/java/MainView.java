@@ -121,20 +121,24 @@ public class MainView extends JFrame {
 
     private JPanel initBottomPanel() {
         bottomPanel = new JPanel();
-        bottomPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
+        bottomPanel.setLayout(new GridLayout(0,2));
+        JPanel rightPanel= new JPanel();
+        rightPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
         errorLabel= new JLabel("");
-        
-        errorLabel.setBorder(new EmptyBorder(0, 10, 0, 30));
-        bottomPanel.add(errorLabel);
+        JPanel leftPanel= new JPanel();
+        leftPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+        leftPanel.add(errorLabel);
+        bottomPanel.add(leftPanel);
         pathModeLabel = new JLabel("Algorytm: Dowolna ścieżka");
         pathModeLabel.setBorder(new EmptyBorder(0, 10, 0, 10));
-        bottomPanel.add(pathModeLabel);
+        rightPanel.add(pathModeLabel);
         xCoordinateLabel = new JLabel("X: -");
         yCoordinateLabel = new JLabel("Y: -");
         xCoordinateLabel.setPreferredSize(new Dimension(60, 14));
         yCoordinateLabel.setPreferredSize(new Dimension(60, 14));
-        bottomPanel.add(xCoordinateLabel);
-        bottomPanel.add(yCoordinateLabel);
+        rightPanel.add(xCoordinateLabel);
+        rightPanel.add(yCoordinateLabel);
+        bottomPanel.add(rightPanel);
 
         return bottomPanel;
     }
