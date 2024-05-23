@@ -6,9 +6,10 @@ import java.awt.event.MouseEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
-class InterfaceController {
+class InterfaceController implements ErrorHandler,CLIListener{
     private MainView view;
     private MazeReader reader;
+    private CLIManager commandManager;
 
     class MazeMotionAdapter extends MouseAdapter {
         private MainView view;
@@ -60,6 +61,7 @@ class InterfaceController {
     public InterfaceController(MainView view) {
         this.view = view;
         reader = new MazeReader();
+        reader.addErrorListener(this);
         view.addOpenFileListener(e -> openFile());
         view.addStartPointListener(e -> setStartPoint());
         view.addEndPointListener(e -> setEndPoint());
@@ -67,6 +69,16 @@ class InterfaceController {
         view.addOnMazeMouseMovedListener(new MazeMotionAdapter(view));
         view.addOnMazeMouseExitedListener(new MazeMotionAdapter(view));
         view.addPointingModeEscapeListener(new MazeKeyAdapter(view));
+        commandManager= new CLIManager();
+        
+        try{
+            commandManager.join();
+        }
+        catch (Exception ex){
+            
+        }
+        commandManager.start();
+        commandManager.addListener(this);
     }
 
     private void openFile() {
@@ -75,15 +87,11 @@ class InterfaceController {
         fileDialog.setCurrentDirectory(new File("src/main/resources"));
         int val = fileDialog.showOpenDialog(this.view);
 
-        try {
+       
             if (val == JFileChooser.APPROVE_OPTION) {
-                view.getMazeStage().setMaze(reader.readMaze(fileDialog.getSelectedFile().getAbsolutePath()));
-                view.getStageContainer().revalidate();
-                view.getStageContainer().repaint();
+                loadMaze(fileDialog.getSelectedFile().getAbsolutePath());
             }
-        } catch (Exception ex) {
-            System.out.print("Wystąpił błąd podczas wczytywania pliku");
-        }
+         
     }
 
     private void setStartPoint() {
@@ -100,5 +108,30 @@ class InterfaceController {
 
     public void updateAlgoDescription() {
         view.setAlgoDescription();
+    }
+
+    @Override
+    public void handleError(Exception ex){
+        view.displayError(ex);
+    }
+
+    @Override
+    public void onCommandEntered(String path){
+        loadMaze(path);
+    }
+
+    private void loadMaze(String path){
+        try{
+
+                view.clearError();
+                view.getMazeStage().setMaze(reader.readMaze(path));
+                view.getStageContainer().revalidate();
+                view.getStageContainer().repaint();
+                
+        }
+        catch (Exception ex) {
+            
+            view.displayError(new Exception("Nie wczytano pliku"));
+        }
     }
 }

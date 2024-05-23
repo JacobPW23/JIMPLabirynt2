@@ -7,6 +7,7 @@ import java.util.Scanner;
 public class MazeReader {
 
     ArrayList<String> mazeLines;
+    ArrayList<ErrorHandler> errorListeners= new ArrayList<ErrorHandler>();
 
     public Maze readMaze(String path) {
 
@@ -26,13 +27,16 @@ public class MazeReader {
 
 
         } catch (FileNotFoundException e) {
-            System.out.println("Wystąpił błąd: brak pliku lub brak dostępu");
+            //System.out.println("Wystąpił błąd: brak pliku lub brak dostępu");
+            notifyListeners(new Exception("Brak pliku lub brak dostępu"));
             return null;
 
         }
         if(!isFileValid(mazeLines)){
-            System.out.println("Wystąpił błąd: plik jest niepoprawny");
+            //System.out.println("Wystąpił błąd: plik jest niepoprawny");
+            notifyListeners(new Exception("Plik jest niepoprawny"));
             throw new IllegalArgumentException("Invalid file");
+            
         }
 
 
@@ -54,5 +58,16 @@ public class MazeReader {
             }
         }
         return true;
+    }
+
+    public void addErrorListener(ErrorHandler handler){
+
+        errorListeners.add(handler);
+    }
+
+    public void notifyListeners(Exception ex){
+
+         for(ErrorHandler l: errorListeners)
+            l.handleError(ex);
     }
 }

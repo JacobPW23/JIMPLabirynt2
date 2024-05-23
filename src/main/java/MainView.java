@@ -31,6 +31,7 @@ public class MainView extends JFrame {
     private JLabel xCoordinateLabel;
     private JLabel yCoordinateLabel;
     private JLabel pathModeLabel;
+    private JLabel errorLabel;
 
     private JScrollPane stageContainer;
 
@@ -120,16 +121,24 @@ public class MainView extends JFrame {
 
     private JPanel initBottomPanel() {
         bottomPanel = new JPanel();
-        bottomPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
+        bottomPanel.setLayout(new GridLayout(0,2));
+        JPanel rightPanel= new JPanel();
+        rightPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
+        errorLabel= new JLabel("");
+        JPanel leftPanel= new JPanel();
+        leftPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+        leftPanel.add(errorLabel);
+        bottomPanel.add(leftPanel);
         pathModeLabel = new JLabel("Algorytm: Dowolna ścieżka");
         pathModeLabel.setBorder(new EmptyBorder(0, 10, 0, 10));
-        bottomPanel.add(pathModeLabel);
+        rightPanel.add(pathModeLabel);
         xCoordinateLabel = new JLabel("X: -");
         yCoordinateLabel = new JLabel("Y: -");
         xCoordinateLabel.setPreferredSize(new Dimension(60, 14));
         yCoordinateLabel.setPreferredSize(new Dimension(60, 14));
-        bottomPanel.add(xCoordinateLabel);
-        bottomPanel.add(yCoordinateLabel);
+        rightPanel.add(xCoordinateLabel);
+        rightPanel.add(yCoordinateLabel);
+        bottomPanel.add(rightPanel);
 
         return bottomPanel;
     }
@@ -194,6 +203,15 @@ public class MainView extends JFrame {
         pathModeLabel.setText(description);
     }
 
+    public void displayError(Exception ex){
+        errorLabel.setText(errorLabel.getText()+" Błąd: "+ ex.getMessage());
+        errorLabel.setForeground(Color.RED);
+    }
+
+    public void clearError(){
+        errorLabel.setText("");
+        errorLabel.setForeground(Color.BLACK);
+    }
     public void addOpenFileListener(ActionListener listener) {
         openFileItem.addActionListener(listener);
     }
