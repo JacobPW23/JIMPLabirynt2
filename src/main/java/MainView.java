@@ -151,7 +151,7 @@ public class MainView extends JFrame {
         return yCoordinateLabel;
     }
 
-    public void setCurrentCoordinates(float y, float x) {
+    public void setCurrentCoordinates(float x, float y) {
         int row = (int) (y - stage.getDrawingYBeginning()) / 10;
         int column = (int) (x - stage.getDrawingXBeginning()) / 10;
 
