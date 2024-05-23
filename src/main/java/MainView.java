@@ -31,6 +31,7 @@ public class MainView extends JFrame {
     private JLabel xCoordinateLabel;
     private JLabel yCoordinateLabel;
     private JLabel pathModeLabel;
+    private JLabel errorLabel;
 
     private JScrollPane stageContainer;
 
@@ -121,6 +122,10 @@ public class MainView extends JFrame {
     private JPanel initBottomPanel() {
         bottomPanel = new JPanel();
         bottomPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
+        errorLabel= new JLabel("");
+        
+        errorLabel.setBorder(new EmptyBorder(0, 10, 0, 30));
+        bottomPanel.add(errorLabel);
         pathModeLabel = new JLabel("Algorytm: Dowolna ścieżka");
         pathModeLabel.setBorder(new EmptyBorder(0, 10, 0, 10));
         bottomPanel.add(pathModeLabel);
@@ -194,6 +199,15 @@ public class MainView extends JFrame {
         pathModeLabel.setText(description);
     }
 
+    public void displayError(Exception ex){
+        errorLabel.setText(errorLabel.getText()+" Błąd: "+ ex.getMessage());
+        errorLabel.setForeground(Color.RED);
+    }
+
+    public void clearError(){
+        errorLabel.setText("");
+        errorLabel.setForeground(Color.BLACK);
+    }
     public void addOpenFileListener(ActionListener listener) {
         openFileItem.addActionListener(listener);
     }

@@ -6,7 +6,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
-class InterfaceController {
+class InterfaceController implements ErrorHandler{
     private MainView view;
     private MazeReader reader;
 
@@ -60,6 +60,7 @@ class InterfaceController {
     public InterfaceController(MainView view) {
         this.view = view;
         reader = new MazeReader();
+        reader.addErrorListener(this);
         view.addOpenFileListener(e -> openFile());
         view.addStartPointListener(e -> setStartPoint());
         view.addEndPointListener(e -> setEndPoint());
@@ -80,9 +81,11 @@ class InterfaceController {
                 view.getMazeStage().setMaze(reader.readMaze(fileDialog.getSelectedFile().getAbsolutePath()));
                 view.getStageContainer().revalidate();
                 view.getStageContainer().repaint();
+                view.clearError();
             }
         } catch (Exception ex) {
-            System.out.print("Wystąpił błąd podczas wczytywania pliku");
+            //System.out.print("Wystąpił błąd podczas wczytywania pliku");
+            view.displayError(new Exception("Nie wczytano pliku"));
         }
     }
 
@@ -100,5 +103,10 @@ class InterfaceController {
 
     public void updateAlgoDescription() {
         view.setAlgoDescription();
+    }
+
+    @Override
+    public void handleError(Exception ex){
+        view.displayError(ex);
     }
 }

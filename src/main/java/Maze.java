@@ -4,6 +4,7 @@ import java.awt.*;
 public class Maze {
 
     public ArrayList<MazeField> fields;
+    public ArrayList<ErrorHandler> errorListeners= new ArrayList<ErrorHandler>();
     private int columnNumber;
     private int rowNumber;
     private Graphics2D g2D;
@@ -47,5 +48,15 @@ public class Maze {
 
     public ArrayList<MazeField> getFields() {
         return fields;
+    }
+
+    public void addErrorListener(ErrorHandler handler){
+        errorListeners.add(handler);
+    }
+
+    private void notifyListeners(Exception ex){ 
+
+        for(ErrorHandler l: errorListeners)
+            l.handleError(ex);
     }
 }
