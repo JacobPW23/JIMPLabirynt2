@@ -115,11 +115,4 @@ public class Maze {
                 g.setEndNode(g.getNodeAt(line.length() - 2, j));
         }
     }
-
-    public static void main(String[] args) {
-        MazeReader reader = new MazeReader();
-        Maze maze = reader.readMaze("src/main/resources/100x100.txt");
-        MazeGraph graph = maze.buildGraph();
-
-    }
 }

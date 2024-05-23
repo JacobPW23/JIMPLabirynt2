@@ -29,6 +29,7 @@ public class MazeGraph {
     public void addNode(Node x) {
         if (!associationLists.containsKey(x)) {
             associationLists.put(x, new HashSet<Node>());
+            nodes.put(new Point((int)x.getXCoordinate(), (int)x.getYCoordinate()), x);
             x.setNumber(nextNodeNumber++);
         }
     }
