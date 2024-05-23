@@ -31,7 +31,10 @@ public class CLIManager extends Thread{
 
     private void notifyListeners(String path){
 
-        for(CLIListener l: listeners)
-            l.onCommandEntered(path);
+        if(!path.isEmpty()){
+
+            for(CLIListener l: listeners)
+                l.onCommandEntered(path);
+        }
     }
 }

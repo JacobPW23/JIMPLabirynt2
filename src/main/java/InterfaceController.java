@@ -123,11 +123,11 @@ class InterfaceController implements ErrorHandler,CLIListener{
     private void loadMaze(String path){
         try{
 
-        
+                view.clearError();
                 view.getMazeStage().setMaze(reader.readMaze(path));
                 view.getStageContainer().revalidate();
                 view.getStageContainer().repaint();
-                view.clearError();
+                
         }
         catch (Exception ex) {
             
