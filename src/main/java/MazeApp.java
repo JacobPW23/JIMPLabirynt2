@@ -3,5 +3,4 @@ public class MazeApp {
         MainView view = new MainView();
         InterfaceController interfaceController = new InterfaceController(view);
     }
-
 }

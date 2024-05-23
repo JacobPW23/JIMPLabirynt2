@@ -1,68 +1,57 @@
-
+import java.util.Objects;
 
 public class Node {
-
-    private double xCoordinate;
-    private double yCoordinate;
+    private int xCoordinate;
+    private int yCoordinate;
     private int number;
 
-    public Node(){}
-    public Node(double x, double y){
-        xCoordinate=x;
-        yCoordinate=y;
+    public Node(int x, int y) {
+        xCoordinate = x;
+        yCoordinate = y;
     }
-    public double getXCoordinate(){
+
+    public double getXCoordinate() {
         return xCoordinate;
     }
 
-    public double getYCoordinate(){
+    public double getYCoordinate() {
         return yCoordinate;
     }
 
-
-    public int getNumber(){
+    public int getNumber() {
         return number;
     }
 
-
-    public void setXCordinate(double x){
-        xCoordinate=x;
+    public void setYCoordinate(int y) {
+        yCoordinate = y;
     }
 
-    public void setYCoordinate(double y){
-        yCoordinate=y;
-    }
-    public void setNumber(int n){
-       number=n;
+    public void setNumber(int n) {
+        number = n;
     }
 
-    
-    public boolean isCollinear(Node tested){
 
-        if(tested.getXCoordinate()==xCoordinate || tested.getYCoordinate()==yCoordinate)
-            return true;
-        return false;
-
+    public boolean isAxisAligned(Node tested) {
+        return tested.getXCoordinate() == xCoordinate || tested.getYCoordinate() == yCoordinate;
     }
-   
-    public int distanceFrom(Node n){
-        return (int) Math.sqrt(Math.pow(n.getXCoordinate()-xCoordinate,2)+Math.pow(n.getYCoordinate()-yCoordinate,2));
+
+    public double distanceFrom(Node n) {
+        return Math.sqrt(Math.pow(n.getXCoordinate() - xCoordinate, 2) + Math.pow(n.getYCoordinate() - yCoordinate, 2));
     }
 
     @Override
-    public boolean equals(Object o){
-
-        return o instanceof Node && ((Node)o).getXCoordinate()==xCoordinate && ((Node) o).getYCoordinate()==yCoordinate;
+    public boolean equals(Object o) {
+        return o instanceof Node && ((Node) o).getXCoordinate() == xCoordinate && ((Node) o).getYCoordinate() == yCoordinate;
     }
 
     @Override
-    public int hashCode(){
-      return  xCoordinate>yCoordinate? (int) (13 *xCoordinate+ 67*yCoordinate) : (int) (73*xCoordinate+211*yCoordinate);
+    public int hashCode() {
+        return Objects.hash(xCoordinate, yCoordinate);
     }
 
-    @Override 
-    public String toString(){
-        return  number+"(" + xCoordinate+", "+ yCoordinate + ")";
+    @Override
+    public String toString() {
+        return number + "(" + xCoordinate + ", " + yCoordinate + ")";
     }
 
 }
