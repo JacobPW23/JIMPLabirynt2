@@ -6,9 +6,10 @@ import java.awt.event.MouseEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
-class InterfaceController implements ErrorHandler{
+class InterfaceController implements ErrorHandler,CLIListener{
     private MainView view;
     private MazeReader reader;
+    private CLIManager commandManager;
 
     class MazeMotionAdapter extends MouseAdapter {
         private MainView view;
@@ -68,6 +69,16 @@ class InterfaceController implements ErrorHandler{
         view.addOnMazeMouseMovedListener(new MazeMotionAdapter(view));
         view.addOnMazeMouseExitedListener(new MazeMotionAdapter(view));
         view.addPointingModeEscapeListener(new MazeKeyAdapter(view));
+        commandManager= new CLIManager();
+        
+        try{
+            commandManager.join();
+        }
+        catch (Exception ex){
+            
+        }
+        commandManager.start();
+        commandManager.addListener(this);
     }
 
     private void openFile() {
@@ -76,17 +87,11 @@ class InterfaceController implements ErrorHandler{
         fileDialog.setCurrentDirectory(new File("src/main/resources"));
         int val = fileDialog.showOpenDialog(this.view);
 
-        try {
+       
             if (val == JFileChooser.APPROVE_OPTION) {
-                view.getMazeStage().setMaze(reader.readMaze(fileDialog.getSelectedFile().getAbsolutePath()));
-                view.getStageContainer().revalidate();
-                view.getStageContainer().repaint();
-                view.clearError();
+                loadMaze(fileDialog.getSelectedFile().getAbsolutePath());
             }
-        } catch (Exception ex) {
-            //System.out.print("Wystąpił błąd podczas wczytywania pliku");
-            view.displayError(new Exception("Nie wczytano pliku"));
-        }
+         
     }
 
     private void setStartPoint() {
@@ -108,5 +113,25 @@ class InterfaceController implements ErrorHandler{
     @Override
     public void handleError(Exception ex){
         view.displayError(ex);
+    }
+
+    @Override
+    public void onCommandEntered(String path){
+        loadMaze(path);
+    }
+
+    private void loadMaze(String path){
+        try{
+
+        
+                view.getMazeStage().setMaze(reader.readMaze(path));
+                view.getStageContainer().revalidate();
+                view.getStageContainer().repaint();
+                view.clearError();
+        }
+        catch (Exception ex) {
+            
+            view.displayError(new Exception("Nie wczytano pliku"));
+        }
     }
 }
