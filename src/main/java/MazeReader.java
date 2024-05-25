@@ -274,7 +274,7 @@ public class MazeReader {
                 notifyListeners(new Exception("Brak końca pliku"));
 					return null;
             }
-            if(buffer[0]=='C' && buffer[0]=='B' && buffer[0]=='R' && buffer[0]=='R'){
+            if(buffer[0]=='C' && buffer[1]=='B' && buffer[2]=='R' && buffer[3]=='R'){
 				//reader has reached EOF- it means no solution section
 				if(!isFileValid(mazeLines)){
 
