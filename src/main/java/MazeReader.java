@@ -92,7 +92,7 @@ public class MazeReader {
 
 		return value;
 	}
-	public String replaceAt(String s, int i,char newValue){
+	public static String replaceAt(String s, int i,char newValue){
 		char charTable []= s.toCharArray();
 		charTable[i]=newValue;
 		s=String.valueOf(charTable);
@@ -113,7 +113,7 @@ public class MazeReader {
 		int currentRow=0;
 		mazeLines= new ArrayList<String>();
 		try{
-			DataInputStream reader = new DataInputStream(new FileInputStream(new File("maze.bin")));
+			DataInputStream reader = new DataInputStream(new FileInputStream(new File(Path)));
 
 			//header
 			if(reader.read(buffer,0,4)!=4){
