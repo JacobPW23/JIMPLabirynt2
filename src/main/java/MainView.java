@@ -21,7 +21,7 @@ public class MainView extends JFrame {
     private JComboBox setAlgorithm;
 
     private JPanel centerPanel;
-    private MazePanel stage;
+    private MazePanel mazePanel;
     private JPanel basePanel;
     private JPanel bottomPanel;
     private JButton findSolutionButton;
@@ -111,8 +111,8 @@ public class MainView extends JFrame {
         stageContainer.getVerticalScrollBar().setUnitIncrement(16);
 
         stageContainer.setAlignmentX(SwingConstants.CENTER);
-        stage = new MazePanel();
-        stageContainer.setViewportView(stage);
+        mazePanel = new MazePanel();
+        stageContainer.setViewportView(mazePanel);
         stageContainer.getViewport().setScrollMode(JViewport.BACKINGSTORE_SCROLL_MODE);
         add(stageContainer, BorderLayout.CENTER);
 
@@ -144,7 +144,7 @@ public class MainView extends JFrame {
     }
 
     public MazePanel getMazeStage() {
-        return stage;
+        return mazePanel;
     }
 
     public JScrollPane getStageContainer() {
@@ -161,10 +161,10 @@ public class MainView extends JFrame {
     }
 
     public void setCurrentCoordinates(float x, float y) {
-        int row = (int) (y - stage.getDrawingYBeginning()) / 10;
-        int column = (int) (x - stage.getDrawingXBeginning()) / 10;
+        int row = (int) (y - mazePanel.getDrawingYBeginning()) / 10;
+        int column = (int) (x - mazePanel.getDrawingXBeginning()) / 10;
 
-        Dimension size = stage.getMazeSize();
+        Dimension size = mazePanel.getMazeSize();
 
         if (row >= 0 && row < size.getHeight() && column >= 0 && column < size.getWidth()) {
             xCoordinateLabel.setText("X: " + column);
@@ -203,6 +203,12 @@ public class MainView extends JFrame {
         pathModeLabel.setText(description);
     }
 
+    public void updateMaze(Maze maze) {
+        mazePanel.setMaze(maze);
+        mazePanel.repaint();
+    }
+
+
     public void displayError(Exception ex){
         errorLabel.setText(errorLabel.getText()+" Błąd: "+ ex.getMessage());
         errorLabel.setForeground(Color.RED);
@@ -212,6 +218,7 @@ public class MainView extends JFrame {
         errorLabel.setText("");
         errorLabel.setForeground(Color.BLACK);
     }
+
     public void addOpenFileListener(ActionListener listener) {
         openFileItem.addActionListener(listener);
     }
@@ -220,24 +227,28 @@ public class MainView extends JFrame {
         startPointButton.addActionListener(listener);
     }
 
+    public void addEndPointListener(ActionListener listener) {
+
+        endPointButton.addActionListener(listener);
+    }
+
+    public void addFindSolutionListener(ActionListener listener) {
+        findSolutionButton.addActionListener(listener);
+    }
+
     public void addOnMazeMouseMovedListener(MouseAdapter listener) {
 
-        stage.addMouseMotionListener(listener);
+        mazePanel.addMouseMotionListener(listener);
     }
 
     public void addOnMazeMouseExitedListener(MouseListener listener) {
 
-        stage.addMouseListener(listener);
+        mazePanel.addMouseListener(listener);
     }
 
     public void addPointingModeEscapeListener(KeyListener listener) {
 
         addKeyListener(listener);
-    }
-
-    public void addEndPointListener(ActionListener listener) {
-
-        endPointButton.addActionListener(listener);
     }
 
     public void addAlgoChangeListener(ItemListener listener) {

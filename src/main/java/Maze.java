@@ -1,13 +1,16 @@
 import java.awt.*;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Stack;
+import java.util.List;
 
 public class Maze {
-
     public ArrayList<MazeField> fields;
     public ArrayList<ErrorHandler> errorListeners = new ArrayList<ErrorHandler>();
     private int columnNumber;
     private int rowNumber;
     public ArrayList<String> lines;
+    public List<Node> solutionPath;
 
     public Maze(ArrayList<String> lines) {
         if (lines.isEmpty())
@@ -27,6 +30,14 @@ public class Maze {
     public void draw(Graphics2D g2D) {
         for (MazeField field : fields) {
             field.draw(g2D);
+        }
+
+        if(solutionPath != null) {
+            for(Node n : solutionPath) {
+                MazeField field = getFieldAt(n.getXCoordinate(), n.getYCoordinate());
+                field.setColor(Color.GREEN);
+                field.draw(g2D);
+            }
         }
     }
 
@@ -106,6 +117,11 @@ public class Maze {
         }
     }
 
+    public void setSolutionPath(Stack<Node> solutionPath) {
+        this.solutionPath = new ArrayList<>(solutionPath);
+    }
+
+
     public void defaultBounds(MazeGraph g) {
         for (int j = 0; j < lines.size(); j++) {
             String line = lines.get(j);
@@ -115,4 +131,5 @@ public class Maze {
                 g.setEndNode(g.getNodeAt(line.length() - 2, j));
         }
     }
+
 }

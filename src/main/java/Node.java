@@ -4,17 +4,19 @@ public class Node {
     private int xCoordinate;
     private int yCoordinate;
     private int number;
+    private boolean isVisited;
 
     public Node(int x, int y) {
         xCoordinate = x;
         yCoordinate = y;
+        isVisited = false;
     }
 
-    public double getXCoordinate() {
+    public int getXCoordinate() {
         return xCoordinate;
     }
 
-    public double getYCoordinate() {
+    public int getYCoordinate() {
         return yCoordinate;
     }
 
@@ -30,6 +32,13 @@ public class Node {
         number = n;
     }
 
+    public boolean isVisited() {
+        return isVisited;
+    }
+
+    public void setVisited(boolean isVisited) {
+        this.isVisited = isVisited;
+    }
 
     public boolean isAxisAligned(Node tested) {
         return tested.getXCoordinate() == xCoordinate || tested.getYCoordinate() == yCoordinate;

@@ -1,14 +1,16 @@
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
-import java.io.File;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.io.File;
 
-class InterfaceController implements ErrorHandler,CLIListener{
+class InterfaceController implements ErrorHandler, CLIListener {
     private MainView view;
     private MazeReader reader;
+    private Maze maze;
+    private MazeSolver solver;
     private CLIManager commandManager;
 
     class MazeMotionAdapter extends MouseAdapter {
@@ -58,24 +60,24 @@ class InterfaceController implements ErrorHandler,CLIListener{
         }
     }
 
-    public InterfaceController(MainView view) {
+    public InterfaceController(MainView view, MazeReader reader) {
         this.view = view;
-        reader = new MazeReader();
+        this.reader = reader;
         reader.addErrorListener(this);
         view.addOpenFileListener(e -> openFile());
         view.addStartPointListener(e -> setStartPoint());
         view.addEndPointListener(e -> setEndPoint());
+        view.addFindSolutionListener(e -> findSolution());
         view.addAlgoChangeListener(e -> updateAlgoDescription());
         view.addOnMazeMouseMovedListener(new MazeMotionAdapter(view));
         view.addOnMazeMouseExitedListener(new MazeMotionAdapter(view));
         view.addPointingModeEscapeListener(new MazeKeyAdapter(view));
-        commandManager= new CLIManager();
-        
-        try{
+        commandManager = new CLIManager();
+
+        try {
             commandManager.join();
-        }
-        catch (Exception ex){
-            
+        } catch (Exception ex) {
+
         }
         commandManager.start();
         commandManager.addListener(this);
@@ -86,12 +88,10 @@ class InterfaceController implements ErrorHandler,CLIListener{
         fileDialog.setFileFilter(new FileNameExtensionFilter("Pliki tekstowe, binarne", "bin", "txt"));
         fileDialog.setCurrentDirectory(new File("src/main/resources"));
         int val = fileDialog.showOpenDialog(this.view);
+        if (val == JFileChooser.APPROVE_OPTION) {
+            loadMaze(fileDialog.getSelectedFile().getAbsolutePath());
+        }
 
-       
-            if (val == JFileChooser.APPROVE_OPTION) {
-                loadMaze(fileDialog.getSelectedFile().getAbsolutePath());
-            }
-         
     }
 
     private void setStartPoint() {
@@ -106,31 +106,45 @@ class InterfaceController implements ErrorHandler,CLIListener{
         view.requestFocus();
     }
 
+    private void findSolution() {
+        if (view.getMazeStage().getMaze() != null) {
+            MazeGraph graph = view.getMazeStage().getMaze().buildGraph();
+            solver = new MazeSolver(graph);
+
+            if (solver.solve()) {
+                view.getMazeStage().getMaze().setSolutionPath(solver.getSolutionStack());
+                view.updateMaze(view.getMazeStage().getMaze());
+            } else {
+                view.displayError(new Exception("Brak rozwiązania"));
+            }
+        }
+    }
+
+
     public void updateAlgoDescription() {
         view.setAlgoDescription();
     }
 
     @Override
-    public void handleError(Exception ex){
+    public void handleError(Exception ex) {
         view.displayError(ex);
     }
 
     @Override
-    public void onCommandEntered(String path){
+    public void onCommandEntered(String path) {
         loadMaze(path);
     }
 
-    private void loadMaze(String path){
-        try{
+    private void loadMaze(String path) {
+        try {
 
-                view.clearError();
-                view.getMazeStage().setMaze(reader.readMaze(path));
-                view.getStageContainer().revalidate();
-                view.getStageContainer().repaint();
-                
-        }
-        catch (Exception ex) {
-            
+            view.clearError();
+            view.getMazeStage().setMaze(reader.readMaze(path));
+            view.getStageContainer().revalidate();
+            view.getStageContainer().repaint();
+
+        } catch (Exception ex) {
+
             view.displayError(new Exception("Nie wczytano pliku"));
         }
     }

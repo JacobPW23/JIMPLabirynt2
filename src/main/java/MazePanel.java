@@ -1,6 +1,7 @@
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.List;
 
 public class MazePanel extends JPanel {
 
@@ -88,6 +89,10 @@ public class MazePanel extends JPanel {
         } else {
             return new Dimension(maze.getRowsNumber(), maze.getColumnsNumber());
         }
+    }
+
+    public Maze getMaze() {
+        return maze;
     }
 
     @Override
