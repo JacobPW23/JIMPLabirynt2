@@ -270,12 +270,9 @@ public class MazeReader {
 			
 
 
-			if(reader.read(buffer,0,4)!=4){
-                notifyListeners(new Exception("Brak końca pliku"));
-					return null;
-            }
-            if(buffer[0]=='C' && buffer[1]=='B' && buffer[2]=='R' && buffer[3]=='R'){
-				//reader has reached EOF- it means no solution section
+			
+            if(solutionOffset==0){
+				//it means no solution section
 				if(!isFileValid(mazeLines)){
 
 					notifyListeners(new Exception("Plik jest niepoprawny"));
@@ -285,7 +282,11 @@ public class MazeReader {
 
 				return new Maze(mazeLines);
 			}
-            
+
+            if(reader.read(buffer,0,4)!=4){
+                notifyListeners(new Exception("Uszkodzony nagłówek rozwiązania"));
+					return null;
+            }
 
 			solutionId=byteArrayToInt(buffer,4);
 
