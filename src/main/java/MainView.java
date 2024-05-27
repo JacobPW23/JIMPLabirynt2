@@ -241,6 +241,10 @@ public class MainView extends JFrame {
         mazePanel.addMouseMotionListener(listener);
     }
 
+    public void addOnMazeMouseClickedListener(MouseListener listener) {
+        mazePanel.addMouseListener(listener);
+    }
+
     public void addOnMazeMouseExitedListener(MouseListener listener) {
 
         mazePanel.addMouseListener(listener);

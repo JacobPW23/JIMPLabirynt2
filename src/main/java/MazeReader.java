@@ -3,9 +3,7 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-
 public class MazeReader {
-
     ArrayList<String> mazeLines;
     ArrayList<ErrorHandler> errorListeners= new ArrayList<ErrorHandler>();
 
@@ -18,28 +16,21 @@ public class MazeReader {
             File myObj = new File(path);
             Scanner myReader = new Scanner(myObj);
             while (myReader.hasNextLine()) {
-
                 data = myReader.nextLine();
-
                 mazeLines.add(data);
             }
             myReader.close();
-
 
         } catch (FileNotFoundException e) {
             //System.out.println("Wystąpił błąd: brak pliku lub brak dostępu");
             notifyListeners(new Exception("Brak pliku lub brak dostępu"));
             return null;
-
         }
         if(!isFileValid(mazeLines)){
             //System.out.println("Wystąpił błąd: plik jest niepoprawny");
             notifyListeners(new Exception("Plik jest niepoprawny"));
             throw new IllegalArgumentException("Invalid file");
-            
         }
-
-
         return new Maze(mazeLines);
     }
 
@@ -61,12 +52,10 @@ public class MazeReader {
     }
 
     public void addErrorListener(ErrorHandler handler){
-
         errorListeners.add(handler);
     }
 
     public void notifyListeners(Exception ex){
-
          for(ErrorHandler l: errorListeners)
             l.handleError(ex);
     }

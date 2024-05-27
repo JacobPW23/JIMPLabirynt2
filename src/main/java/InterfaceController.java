@@ -9,7 +9,6 @@ import java.io.File;
 class InterfaceController implements ErrorHandler, CLIListener {
     private MainView view;
     private MazeReader reader;
-    private Maze maze;
     private MazeSolver solver;
     private CLIManager commandManager;
 
@@ -24,6 +23,32 @@ class InterfaceController implements ErrorHandler, CLIListener {
         public void mouseMoved(MouseEvent e) {
             view.setCurrentCoordinates(e.getX(), e.getY());
             updatePointer(e.getX(), e.getY());
+        }
+
+        @Override
+        public void mouseClicked(MouseEvent e) {
+            int x = e.getX();
+            int y = e.getY();
+
+            int offsetX = view.getMazeStage().getDrawingXBeginning();
+            int offsetY = view.getMazeStage().getDrawingYBeginning();
+
+            int column = (x - offsetX) / MazeField.wallSize;
+            int row = (y - offsetY) / MazeField.wallSize;
+
+            Maze maze = view.getMazeStage().getMaze();
+
+            if (column >= 0 && column < maze.getColumnsNumber() && row >= 0 && row < maze.getRowsNumber()) {
+                if (view.getMazeStage().getPointingMode() == MazePanel.START_POINTING_MODE) {
+                    maze.setStartPoint(column, row);
+                } else if (view.getMazeStage().getPointingMode() == MazePanel.END_POINTING_MODE) {
+                    maze.setEndPoint(column, row);
+                }
+                view.updateMaze(maze);
+                view.unlockPointButtons();
+            } else {
+                System.out.println("Clicked outside maze boundaries");
+            }
         }
 
         @Override
@@ -60,9 +85,10 @@ class InterfaceController implements ErrorHandler, CLIListener {
         }
     }
 
-    public InterfaceController(MainView view, MazeReader reader) {
+    public InterfaceController(MainView view) {
         this.view = view;
-        this.reader = reader;
+
+        reader = new MazeReader();
         reader.addErrorListener(this);
         view.addOpenFileListener(e -> openFile());
         view.addStartPointListener(e -> setStartPoint());
@@ -71,13 +97,14 @@ class InterfaceController implements ErrorHandler, CLIListener {
         view.addAlgoChangeListener(e -> updateAlgoDescription());
         view.addOnMazeMouseMovedListener(new MazeMotionAdapter(view));
         view.addOnMazeMouseExitedListener(new MazeMotionAdapter(view));
+        view.addOnMazeMouseClickedListener(new MazeMotionAdapter(view));
         view.addPointingModeEscapeListener(new MazeKeyAdapter(view));
         commandManager = new CLIManager();
 
         try {
             commandManager.join();
         } catch (Exception ex) {
-
+            ex.printStackTrace();
         }
         commandManager.start();
         commandManager.addListener(this);
@@ -85,13 +112,12 @@ class InterfaceController implements ErrorHandler, CLIListener {
 
     private void openFile() {
         JFileChooser fileDialog = new JFileChooser();
-        fileDialog.setFileFilter(new FileNameExtensionFilter("Pliki tekstowe, binarne", "bin", "txt"));
+        fileDialog.setFileFilter(new FileNameExtensionFilter("Text and Binary Files", "bin", "txt"));
         fileDialog.setCurrentDirectory(new File("src/main/resources"));
         int val = fileDialog.showOpenDialog(this.view);
         if (val == JFileChooser.APPROVE_OPTION) {
             loadMaze(fileDialog.getSelectedFile().getAbsolutePath());
         }
-
     }
 
     private void setStartPoint() {
@@ -108,18 +134,22 @@ class InterfaceController implements ErrorHandler, CLIListener {
 
     private void findSolution() {
         if (view.getMazeStage().getMaze() != null) {
-            MazeGraph graph = view.getMazeStage().getMaze().buildGraph();
+            MazeGraph graph = view.getMazeStage().getMaze().getGraph();
+
+            for (Node node : graph.getNodes()) {
+                node.setVisited(false);
+            }
+
             solver = new MazeSolver(graph);
 
             if (solver.solve()) {
                 view.getMazeStage().getMaze().setSolutionPath(solver.getSolutionStack());
                 view.updateMaze(view.getMazeStage().getMaze());
             } else {
-                view.displayError(new Exception("Brak rozwiązania"));
+                view.displayError(new Exception("No solution found"));
             }
         }
     }
-
 
     public void updateAlgoDescription() {
         view.setAlgoDescription();
@@ -133,19 +163,22 @@ class InterfaceController implements ErrorHandler, CLIListener {
     @Override
     public void onCommandEntered(String path) {
         loadMaze(path);
+        findSolution();
     }
 
     private void loadMaze(String path) {
         try {
-
             view.clearError();
-            view.getMazeStage().setMaze(reader.readMaze(path));
+            Maze maze = reader.readMaze(path);
+            view.getMazeStage().setMaze(maze);
+            maze.buildGraph();
+            maze.defaultBounds(maze.getGraph());
+            view.updateMaze(maze);
             view.getStageContainer().revalidate();
             view.getStageContainer().repaint();
-
         } catch (Exception ex) {
-
-            view.displayError(new Exception("Nie wczytano pliku"));
+            view.displayError(new Exception("Failed to load file"));
         }
     }
 }
+
