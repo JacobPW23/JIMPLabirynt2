@@ -1,35 +1,38 @@
 import java.awt.*;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
+import java.lang.reflect.Array;
+import java.util.*;
 
 
 public class MazeGraph {
-
-    protected HashMap<Point, Node> nodes = new HashMap<>();
-    protected HashMap<Node, HashSet<Node>> associationLists = new HashMap<>();
+    private Maze maze;
+    protected Node[][] nodes;
+    protected HashMap<Node, ArrayList<Node>> associationLists = new HashMap<>();
     protected Node beginning;
     protected Node end;
     protected int nextNodeNumber = 0;
 
-    public HashSet<Node> getAssociationList(Node n) {
-        HashSet<Node> s = associationLists == null ? null : associationLists.get(n);
-        return s == null ? new HashSet<>() : s;
+    public MazeGraph(Maze maze) {
+        this.maze = maze;
+        this.nodes = new Node[maze.getColumnsNumber()][maze.getRowsNumber()];
+    }
+
+    public ArrayList<Node> getAssociationList(Node n) {
+        ArrayList<Node> s = associationLists == null ? null : associationLists.get(n);
+        return s == null ? new ArrayList<Node>() : s;
     }
 
     public Set<Node> getNodes() {
         return this.associationLists.keySet();
     }
 
-    public Node getNodeAt(double x, double y) {
-        return nodes.get(new Point((int) x, (int) y));
+    public Node getNodeAt(int x, int y) {
+        return nodes[x][y];
     }
 
     public void addNode(Node x) {
         if (!associationLists.containsKey(x)) {
-            associationLists.put(x, new HashSet<Node>());
-            nodes.put(new Point((int)x.getXCoordinate(), (int)x.getYCoordinate()), x);
+            associationLists.put(x, new ArrayList<>());
+            nodes[x.getXCoordinate()][x.getYCoordinate()] = x;
             x.setNumber(nextNodeNumber++);
         }
     }
@@ -38,6 +41,53 @@ public class MazeGraph {
         if (associationLists.containsKey(a) && associationLists.containsKey(b)) {
             associationLists.get(a).add(b);
             associationLists.get(b).add(a);
+        }
+    }
+
+    public void buildGraph() {
+        createNodes();
+        createAssociation();
+    }
+
+    public void createAssociation() {
+        establishAssociation(getBeginingNode(), getNodeAt(getBeginingNode().getXCoordinate() + 1, getBeginingNode().getYCoordinate()));
+        establishAssociation(getEndNode(), getNodeAt(getEndNode().getXCoordinate() - 1, getEndNode().getYCoordinate()));
+        for (int i = 1; i < maze.lines.size() - 1; i++) {
+            String line = maze.lines.get(i);
+
+            for (int j = 1; j < line.length() - 1; j++) {
+                Node current = getNodeAt(j, i);
+                establishAssociation(current, getNodeAt(j - 1, i));
+                establishAssociation(current, getNodeAt(j + 1, i));
+                establishAssociation(current, getNodeAt(j, i - 1));
+                establishAssociation(current, getNodeAt(j, i + 1));
+            }
+        }
+    }
+
+    protected void createNodes() {
+
+        for (int i = 1; i < maze.lines.size() - 1; i++) {
+
+            String line = maze.lines.get(i);
+            int j = 0;
+            if (line.charAt(j) == 'P') {
+                Node begin = new Node(j++, i);
+                addNode(begin);
+                setBeginningNode(begin);
+            }
+            while (j < line.length() - 1) {
+                if (line.charAt(j) == ' ') {
+                    addNode(new Node(j, i));
+                }
+                j++;
+            }
+
+            if (line.charAt(j) == 'K') {
+                Node end = new Node(j, i);
+                addNode(end);
+                setEndNode(end);
+            }
         }
     }
 
