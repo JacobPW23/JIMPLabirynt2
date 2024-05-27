@@ -5,6 +5,10 @@ public class Maze {
 
     public ArrayList<MazeField> fields;
     public ArrayList<ErrorHandler> errorListeners= new ArrayList<ErrorHandler>();
+    private int entryX;
+    private int entryY;
+    private int exitX;
+    private int exitY;
     private int columnNumber;
     private int rowNumber;
     private Graphics2D g2D;
@@ -23,6 +27,7 @@ public class Maze {
             for (int i = 0; i < line.length(); i++)
                 fields.add(new MazeField(line.charAt(i), i, j));
         }
+        setHoles();
     }
 
     public void draw(Graphics2D g2D) {
@@ -33,6 +38,14 @@ public class Maze {
 
     public int getColumnsNumber() {
         return this.columnNumber;
+    }
+
+    public Point getEntry(){
+
+        return new Point(entryX,entryY);
+    }
+    public Point getExit(){
+        return new Point(exitX,exitY);
     }
 
     public int getRowsNumber() {
@@ -59,4 +72,24 @@ public class Maze {
         for(ErrorHandler l: errorListeners)
             l.handleError(ex);
     }
+
+    private void setHoles(){
+        String line=null;
+        for(int j=0;j<lines.size();j++){
+			 line=lines.get(j);
+             for(int i=0;i<line.length();i++)
+				if(line.charAt(i)=='P'){
+                    entryY=j;
+                    entryX=i;
+                }
+                    
+            
+				else if(line.charAt(i)=='K'){
+                    exitY=j;
+                    exitX=i;
+                }
+        }
+
+    }
+    
 }
