@@ -5,7 +5,13 @@ import java.util.Stack;
 
 public class Maze {
     public ArrayList<MazeField> fields;
-    public ArrayList<ErrorHandler> errorListeners = new ArrayList<>();
+
+    public ArrayList<ErrorHandler> errorListeners= new ArrayList<ErrorHandler>();
+    private int entryX;
+    private int entryY;
+    private int exitX;
+    private int exitY;
+
     private int columnNumber;
     private int rowNumber;
     public ArrayList<String> lines;
@@ -25,8 +31,12 @@ public class Maze {
                 fields.add(new MazeField(line.charAt(i), i, j));
         }
 
+
         graph = new MazeGraph(columnNumber, rowNumber);
         buildGraph();
+
+        setHoles();
+
     }
 
     public void draw(Graphics2D g2D) {
@@ -90,6 +100,14 @@ public class Maze {
         return this.columnNumber;
     }
 
+    public Point getEntry(){
+
+        return new Point(entryX,entryY);
+    }
+    public Point getExit(){
+        return new Point(exitX,exitY);
+    }
+
     public int getRowsNumber() {
         return this.rowNumber;
     }
@@ -150,11 +168,24 @@ public class Maze {
         }
     }
 
-    public static void main(String[] args) {
-        MazeReader reader = new MazeReader();
-        Maze maze = reader.readMaze("src/main/resources/100x100.txt");
-        maze.createNodes();
-        maze.buildGraph();
-        System.out.println(maze.getGraph().getNumNodes());
+   
+    private void setHoles(){
+        String line=null;
+        for(int j=0;j<lines.size();j++){
+			 line=lines.get(j);
+             for(int i=0;i<line.length();i++)
+				if(line.charAt(i)=='P'){
+                    entryY=j;
+                    entryX=i;
+                }
+                    
+            
+				else if(line.charAt(i)=='K'){
+                    exitY=j;
+                    exitX=i;
+                }
+        }
+
     }
+    
 }

@@ -8,6 +8,7 @@ import java.io.File;
 
 class InterfaceController implements ErrorHandler, CLIListener {
     private MainView view;
+    private Maze maze;
     private MazeReader reader;
     private MazeSolver solver;
     private CLIManager commandManager;
@@ -166,18 +167,28 @@ class InterfaceController implements ErrorHandler, CLIListener {
         findSolution();
     }
 
-    private void loadMaze(String path) {
-        try {
-            view.clearError();
-            Maze maze = reader.readMaze(path);
-            view.getMazeStage().setMaze(maze);
-            maze.buildGraph();
-            maze.defaultBounds(maze.getGraph());
-            view.updateMaze(maze);
-            view.getStageContainer().revalidate();
-            view.getStageContainer().repaint();
-        } catch (Exception ex) {
+  
+    private void loadMaze(String path){
+        try{
+
+                view.clearError();
+                maze=null;
+                if(path.substring(path.lastIndexOf(".")).equals(".bin"))
+                    maze=reader.readCompressedMaze(path);
+                else if(path.substring(path.lastIndexOf(".")).equals(".txt"))
+                    maze= reader.readMaze(path);
+                maze.buildGraph();
+                maze.defaultBounds(maze.getGraph());
+                view.updateMaze(maze);
+                view.getMazeStage().setMaze(maze);
+                view.getStageContainer().revalidate();
+                view.getStageContainer().repaint();
+                
+        }
+        catch (Exception ex) {
+            
             view.displayError(new Exception("Failed to load file"));
+
         }
     }
 }
