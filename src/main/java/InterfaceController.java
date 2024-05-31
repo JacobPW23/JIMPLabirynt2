@@ -42,20 +42,26 @@ class InterfaceController implements ErrorHandler, CLIListener {
             if (column >= 0 && column < maze.getColumnsNumber() && row >= 0 && row < maze.getRowsNumber()) {
                 if (view.getMazeStage().getPointingMode() == MazePanel.START_POINTING_MODE) {
                     maze.setStartPoint(column, row);
+                    
                 } else if (view.getMazeStage().getPointingMode() == MazePanel.END_POINTING_MODE) {
                     maze.setEndPoint(column, row);
+                    
                 }
                 view.updateMaze(maze);
                 view.unlockPointButtons();
             } else {
                 System.out.println("Clicked outside maze boundaries");
             }
+            clearPointer();
+            view.getMazeStage().setPointingMode(MazePanel.NO_POINTING_MODE);
+            
         }
 
         @Override
         public void mouseExited(MouseEvent e) {
             view.setNoCoordinates();
-            clearPointer();
+            if(view.getMazeStage().getPointingMode()!=MazePanel.NO_POINTING_MODE)
+                clearPointer();
         }
 
         public void updatePointer(int x, int y) {
@@ -92,6 +98,8 @@ class InterfaceController implements ErrorHandler, CLIListener {
         reader = new MazeReader();
         reader.addErrorListener(this);
         view.addOpenFileListener(e -> openFile());
+        view.addSaveCompressedListener(e->saveAsCompressed());
+        view.addSaveSolutionListener(e->saveSolution());
         view.addStartPointListener(e -> setStartPoint());
         view.addEndPointListener(e -> setEndPoint());
         view.addFindSolutionListener(e -> findSolution());
@@ -121,6 +129,29 @@ class InterfaceController implements ErrorHandler, CLIListener {
         }
     }
 
+    private void saveAsCompressed(){
+
+         JFileChooser fileDialog = new JFileChooser();
+        fileDialog.setFileFilter(new FileNameExtensionFilter("Text and Binary Files", "bin"));
+        fileDialog.setCurrentDirectory(new File("src/main/resources"));
+        int val = fileDialog.showSaveDialog(this.view);
+        if (val == JFileChooser.APPROVE_OPTION) {
+            //loadMaze(fileDialog.getSelectedFile().getAbsolutePath());
+        }
+
+    }
+
+    private void saveSolution(){
+
+         JFileChooser fileDialog = new JFileChooser();
+        fileDialog.setFileFilter(new FileNameExtensionFilter("Text and Binary Files", "txt"));
+        fileDialog.setCurrentDirectory(new File("src/main/resources"));
+        int val = fileDialog.showSaveDialog(this.view);
+        if (val == JFileChooser.APPROVE_OPTION) {
+            //loadMaze(fileDialog.getSelectedFile().getAbsolutePath());
+        }
+
+    }
     private void setStartPoint() {
         view.getMazeStage().setPointingMode(MazePanel.START_POINTING_MODE);
         view.lockPointButtons();
@@ -134,13 +165,14 @@ class InterfaceController implements ErrorHandler, CLIListener {
     }
 
     private void findSolution() {
+        view.getMazeStage().setPointingMode(MazePanel.NO_POINTING_MODE);
         if (view.getMazeStage().getMaze() != null) {
             MazeGraph graph = view.getMazeStage().getMaze().getGraph();
 
             for (Node node : graph.getNodes()) {
                 node.setVisited(false);
             }
-
+            maze.resetPathDrawing();
             solver = new MazeSolver(graph);
 
             if (solver.solve()) {
@@ -183,6 +215,7 @@ class InterfaceController implements ErrorHandler, CLIListener {
                 view.getMazeStage().setMaze(maze);
                 view.getStageContainer().revalidate();
                 view.getStageContainer().repaint();
+                view.unlockPointButtons();
                 
         }
         catch (Exception ex) {
@@ -191,5 +224,7 @@ class InterfaceController implements ErrorHandler, CLIListener {
 
         }
     }
+
+
 }
 

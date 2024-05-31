@@ -30,13 +30,13 @@ public class MazeReader {
 
 		} catch (FileNotFoundException e) {
 			//System.out.println("Wystąpił błąd: brak pliku lub brak dostępu");
-			notifyListeners(new Exception("Brak pliku lub brak dostępu"));
+			notifyListeners(new Exception("No such file or access denied"));
 			return null;
 
 		}
 		if(!isFileValid(mazeLines)){
 			//System.out.println("Wystąpił błąd: plik jest niepoprawny");
-			notifyListeners(new Exception("Plik jest niepoprawny"));
+			notifyListeners(new Exception("Invalid file"));
 			throw new IllegalArgumentException("Invalid file");
 
 		}
@@ -117,20 +117,20 @@ public class MazeReader {
 			//header
 			if(reader.read(buffer,0,4)!=4){
 
-				notifyListeners(new Exception("Uszkodzony nagłówek"));
+				notifyListeners(new Exception("Broken file header"));
 				return null;
 			}
 			else fileId=byteArrayToInt(buffer,4);
 
 			if(reader.read(buffer,0,1)!=1){
 
-				notifyListeners(new Exception("Uszkodzony nagłówek"));
+				notifyListeners(new Exception("Broken file header"));
 				return null;
 			}
 
 			if(reader.read(buffer,0,2)!=2) {
 
-				notifyListeners(new Exception("Uszkodzony nagłówek"));
+				notifyListeners(new Exception("Broken file header"));
 				return null;
 			}
 			else columns=byteArrayToInt(buffer,2);
@@ -138,72 +138,72 @@ public class MazeReader {
 
 			if(reader.read(buffer,0,2)!=2){
 
-				notifyListeners(new Exception("Uszkodzony nagłówek"));
+				notifyListeners(new Exception("Broken file header"));
 				return null;
 			}
 			else rows=byteArrayToInt(buffer,2);
 
 			if(reader.read(buffer,0,2)!=2){
 
-				notifyListeners(new Exception("Uszkodzony nagłówek"));
+				notifyListeners(new Exception("Broken file header"));
 				return null;
 			}
 			else entryX=byteArrayToInt(buffer,2)-1;
 
 			if(reader.read(buffer,0,2)!=2){
 
-				notifyListeners(new Exception("Uszkodzony nagłówek"));
+				notifyListeners(new Exception("Broken file header"));
 				return null;
 			}
 			else entryY=byteArrayToInt(buffer,2)-1;
 
 			if(reader.read(buffer,0,2)!=2){
 
-				notifyListeners(new Exception("Uszkodzony nagłówek"));
+				notifyListeners(new Exception("Broken file header"));
 				return null;
 			}
 			else exitX=byteArrayToInt(buffer,2)-1;
 
 			if(reader.read(buffer,0,2)!=2){
 
-				notifyListeners(new Exception("Uszkodzony nagłówek"));
+				notifyListeners(new Exception("Broken file header"));
 				return null;
 			}
 			else exitY=byteArrayToInt(buffer,2)-1;
 
 			if(reader.skipBytes(12)!=12)
-				notifyListeners(new Exception("Uszkodzony nagłówek"));
+				notifyListeners(new Exception("Broken file header"));
 			if(reader.read(buffer,0,4)!=4){
 
-				notifyListeners(new Exception("Uszkodzony nagłówek"));
+				notifyListeners(new Exception("Broken file header"));
 				return null;
 			}
 			else counter=byteArrayToInt(buffer,4);
 
 			if(reader.read(buffer,0,4)!=4){
 
-				notifyListeners(new Exception("Uszkodzony nagłówek"));
+				notifyListeners(new Exception("Broken file header"));
 				return null;
 			}
 			else solutionOffset=byteArrayToInt(buffer,4);
 
 			if(reader.read(buffer,0,1)!=1){
 
-				notifyListeners(new Exception("Uszkodzony nagłówek"));
+				notifyListeners(new Exception("Broken file header"));
 				return null;
 			}
 			else separator=byteArrayToInt(buffer,1);
 
 			if(reader.read(buffer,0,1)!=1){
 
-				notifyListeners(new Exception("Uszkodzony nagłówek"));
+				notifyListeners(new Exception("Broken file header"));
 				return null;
 			}
 			else wall=byteArrayToInt(buffer,1);
 
 			if(reader.read(buffer,0,1)!=1){
 
-				notifyListeners(new Exception("Uszkodzony nagłówek"));
+				notifyListeners(new Exception("Broken file header"));
 				return null;
 			}
 			else path=byteArrayToInt(buffer,1);
@@ -219,20 +219,20 @@ public class MazeReader {
 
 				if(reader.read(buffer,0,1)!=1){
 
-					notifyListeners(new Exception("Uszkodzona sekcja słów"));
+					notifyListeners(new Exception("Broken codewords section"));
 					return null;
 				}
 
 
 				if(reader.read(buffer,0,1)!=1){
 
-					notifyListeners(new Exception("Uszkodzona sekcja słów"));
+					notifyListeners(new Exception("Broken codewords section"));
 					return null;
 				}
 				fieldChar=(char)byteArrayToInt(buffer,1);
 				if(reader.read(buffer,0,1)!=1){
 
-					notifyListeners(new Exception("Uszkodzona sekcja słów"));
+					notifyListeners(new Exception("Broken codewords section"));
 					return null;
 				}
 
@@ -274,7 +274,7 @@ public class MazeReader {
 				//it means no solution section
 				if(!isFileValid(mazeLines)){
 
-					notifyListeners(new Exception("Plik jest niepoprawny"));
+					notifyListeners(new Exception("Invalid file"));
 					return null;
 
 				}
@@ -283,7 +283,7 @@ public class MazeReader {
 			}
 
             if(reader.read(buffer,0,4)!=4){
-                notifyListeners(new Exception("Uszkodzony nagłówek rozwiązania"));
+                notifyListeners(new Exception("Broken solution header"));
 					return null;
             }
 
@@ -297,7 +297,7 @@ public class MazeReader {
 
 			if(reader.read(buffer,0,1)!=1){
 
-				notifyListeners(new Exception("Uszkodzona sekcja rozwiązania"));
+				notifyListeners(new Exception("Broken solution section"));
 
 			}
 			solutionStepsNumber=byteArrayToInt(buffer,1);
@@ -309,13 +309,13 @@ public class MazeReader {
 
                     if(reader.read(buffer,0,1)!=1){
 
-				        notifyListeners(new Exception("Uszkodzona sekcja rozwiązania"));
+				        notifyListeners(new Exception("Broken solution section"));
                     }
                     directionField=(char)byteArrayToInt(buffer,1);
 
                     if(reader.read(buffer,0,1)!=1){
 
-				        notifyListeners(new Exception("Uszkodzona sekcja rozwiązania"));
+				        notifyListeners(new Exception("Broken solution section"));
                     }
                     step=byteArrayToInt(buffer,1);
                     //Above instructions do not exclude maze loading, but only path becacuse of path's optional character
@@ -328,7 +328,7 @@ public class MazeReader {
 
 			if(!isFileValid(mazeLines)){
 
-				notifyListeners(new Exception("Plik jest niepoprawny"));
+				notifyListeners(new Exception("Invalid file"));
 				return null;
 
 			}

@@ -17,6 +17,8 @@ public class Maze {
     public ArrayList<String> lines;
     public List<Node> solutionPath;
     private MazeGraph graph;
+    private MazeField lastStartPoint;
+    private MazeField lastEndPoint;
 
     public Maze(ArrayList<String> lines) {
         if (lines.isEmpty()) return;
@@ -139,6 +141,11 @@ public class Maze {
         Node start = graph.getNodeAt(x, y);
         if (start != null) {
             graph.setBeginningNode(start);
+            if(lastStartPoint!=null){
+                lastStartPoint.setHighlight(false);
+                
+            }
+            lastStartPoint=getFieldAt(x,y);
         } else {
             System.out.println("Invalid start point: (" + x + ", " + y + ")");
         }
@@ -148,6 +155,11 @@ public class Maze {
         Node end = graph.getNodeAt(x, y);
         if (end != null) {
             graph.setEndNode(end);
+              if(lastEndPoint!=null){
+                lastEndPoint.setHighlight(false);
+                
+            }
+            lastEndPoint=getFieldAt(x,y);
         } else {
             //Można dodać obsługę błędu
             System.out.println("Invalid end point: (" + x + ", " + y + ")");
@@ -187,5 +199,14 @@ public class Maze {
         }
 
     }
+
+    public void resetPathDrawing(){
+
+        for(MazeField field: fields){
+
+                field.setDefaultColor();
+            }
+    }
+      
     
 }

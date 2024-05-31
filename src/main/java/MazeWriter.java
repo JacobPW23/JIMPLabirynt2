@@ -169,7 +169,7 @@ public class MazeWriter{
 
         //here solution should be divided into words
         // I advise to use the same class CodeWord only without using separator field 
-        // And of course it should be remeberd that solution step might be longer than 256 fileds so it must be divided into more than single one-byte word
+        // And of course it should be remebered that solution step might be longer than 256 fileds so it must be divided into more than single one-byte word
         // in simmilar manner as it is done in prepareLineWords method.
 
 
