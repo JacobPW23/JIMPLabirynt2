@@ -75,11 +75,11 @@ public class MazePanel extends JPanel {
         return POINTING_MODE;
     }
 
-    public float getDrawingXBeginning() {
+    public int getDrawingXBeginning() {
         return drawingXBeginning;
     }
 
-    public float getDrawingYBeginning() {
+    public int getDrawingYBeginning() {
         return drawingYBeginning;
     }
 
