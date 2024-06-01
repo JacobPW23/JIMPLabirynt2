@@ -22,14 +22,12 @@ public class MazeReader {
             myReader.close();
 
         } catch (FileNotFoundException e) {
-            //System.out.println("Wystąpił błąd: brak pliku lub brak dostępu");
             notifyListeners(new Exception("Brak pliku lub brak dostępu"));
             return null;
         }
         if(!isFileValid(mazeLines)){
-            //System.out.println("Wystąpił błąd: plik jest niepoprawny");
             notifyListeners(new Exception("Plik jest niepoprawny"));
-            throw new IllegalArgumentException("Invalid file");
+            throw new IllegalArgumentException("Niepoprawny plik");
         }
         return new Maze(mazeLines);
     }
