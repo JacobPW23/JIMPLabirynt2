@@ -86,6 +86,18 @@ public class Maze {
         }
     }
 
+    public void clearSolutionPath() {
+        if (solutionPath != null) {
+            for (Node n : solutionPath) {
+                MazeField field = getFieldAt(n.getXCoordinate(), n.getYCoordinate());
+                if (field != null && field.isPath()) {
+                    field.setColor(Color.WHITE); // Reset to original color for path
+                }
+            }
+            solutionPath = null;
+        }
+    }
+
     public int getColumnsNumber() {
         return this.columnNumber;
     }
@@ -114,7 +126,12 @@ public class Maze {
     }
 
     public void setSolutionPath(Stack<Node> solutionPath) {
-        this.solutionPath = new ArrayList<>(solutionPath);
+        if(solutionPath!=null) {
+            this.solutionPath = new ArrayList<>(solutionPath);
+        }
+        else {
+            this.solutionPath = null;
+        }
     }
 
     public void setStartPoint(int x, int y) {
@@ -138,6 +155,10 @@ public class Maze {
 
     public MazeGraph getGraph() {
         return graph;
+    }
+
+    public List<Node> getSolutionPath() {
+        return solutionPath;
     }
 
     public void defaultBounds(MazeGraph g) {

@@ -30,7 +30,7 @@ public class MazePanel extends JPanel {
         wallColor = Color.BLACK;
         pathColor = Color.WHITE;
         pointingColor = Color.RED;
-        solutionPathColor = Color.ORANGE;
+        solutionPathColor = Color.GREEN;
         drawingXBeginning = 0;
         drawingYBeginning = 0;
     }
@@ -55,6 +55,13 @@ public class MazePanel extends JPanel {
             previousHighlighted.setHighlight(false);
             repaint();
             previousHighlighted = null;
+        }
+    }
+
+    public void clearPath() {
+        if (maze != null) {
+            maze.clearSolutionPath();
+            repaint();
         }
     }
 

@@ -5,6 +5,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
+import java.text.spi.BreakIteratorProvider;
 
 class InterfaceController implements ErrorHandler, CLIListener {
     private MainView view;
@@ -121,12 +122,14 @@ class InterfaceController implements ErrorHandler, CLIListener {
     }
 
     private void setStartPoint() {
+        view.getMazeStage().clearPath();
         view.getMazeStage().setPointingMode(MazePanel.START_POINTING_MODE);
         view.lockPointButtons();
         view.requestFocus();
     }
 
     private void setEndPoint() {
+        view.getMazeStage().clearPath();
         view.getMazeStage().setPointingMode(MazePanel.END_POINTING_MODE);
         view.lockPointButtons();
         view.requestFocus();
