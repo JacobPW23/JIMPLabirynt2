@@ -50,6 +50,8 @@ class InterfaceController implements ErrorHandler, CLIListener {
             } else {
                 view.displayError(new Exception("Kliknięcie poza labiryntem"));
             }
+            view.getMazeStage().setPointingMode(MazePanel.NO_POINTING_MODE);
+            view.getMazeStage().clearHighlighted();
         }
 
         @Override
