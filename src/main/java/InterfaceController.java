@@ -48,7 +48,7 @@ class InterfaceController implements ErrorHandler, CLIListener {
                 view.updateMaze(maze);
                 view.unlockPointButtons();
             } else {
-                System.out.println("Clicked outside maze boundaries");
+                view.displayError(new Exception("Kliknięcie poza labiryntem"));
             }
         }
 
@@ -149,7 +149,7 @@ class InterfaceController implements ErrorHandler, CLIListener {
                 view.getMazeStage().getMaze().setSolutionPath(solver.getSolutionStack());
                 view.updateMaze(view.getMazeStage().getMaze());
             } else {
-                view.displayError(new Exception("No solution found"));
+                view.displayError(new Exception("Nie znaleziono rozwiązania"));
             }
         }
     }
@@ -180,7 +180,7 @@ class InterfaceController implements ErrorHandler, CLIListener {
             view.getStageContainer().revalidate();
             view.getStageContainer().repaint();
         } catch (Exception ex) {
-            view.displayError(new Exception("Failed to load file"));
+            view.displayError(new Exception("Nie udało się załadować labiryntu"));
         }
     }
 }

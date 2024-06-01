@@ -208,9 +208,8 @@ public class MainView extends JFrame {
         mazePanel.repaint();
     }
 
-
     public void displayError(Exception ex){
-        errorLabel.setText(errorLabel.getText()+" Błąd: "+ ex.getMessage());
+        errorLabel.setText(" Błąd: "+ ex.getMessage());
         errorLabel.setForeground(Color.RED);
     }
 
