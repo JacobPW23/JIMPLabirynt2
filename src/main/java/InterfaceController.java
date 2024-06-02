@@ -124,7 +124,12 @@ class InterfaceController implements ErrorHandler,CLIListener{
         try{
 
                 view.clearError();
-                view.getMazeStage().setMaze(reader.readMaze(path));
+                Maze m=null;
+                if(path.substring(path.lastIndexOf(".")).equals(".bin"))
+                    m=reader.readCompressedMaze(path);
+                else if(path.substring(path.lastIndexOf(".")).equals(".txt"))
+                    m= reader.readMaze(path);
+                view.getMazeStage().setMaze(m);
                 view.getStageContainer().revalidate();
                 view.getStageContainer().repaint();
                 
