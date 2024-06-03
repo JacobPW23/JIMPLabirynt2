@@ -84,6 +84,9 @@ public class MazeWriterTest extends TestCase
         assertNotEquals(steps.size(),0);
         assertEquals(steps.get(0),"S2");
         assertEquals(steps.get(steps.size()-1),"S2");
+
+        for(Node n:maze.getSolution().getNodes())
+            System.out.print(n);
       
     }
 }

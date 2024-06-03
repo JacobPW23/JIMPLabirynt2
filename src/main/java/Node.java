@@ -28,6 +28,9 @@ public class Node {
         yCoordinate = y;
     }
 
+    public void setXCoordinate(int x){
+        this.xCoordinate=x;
+    }
     public void setNumber(int n) {
         number = n;
     }
