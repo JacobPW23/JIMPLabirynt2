@@ -46,6 +46,7 @@ public class MazeField {
 
     public void setColor(Color color) {
         this.color = color;
+        this.shape = new Rectangle2D.Float(this.shape.x, this.shape.y, this.shape.width, this.shape.height);
     }
 
     public Rectangle2D.Float getShape() {

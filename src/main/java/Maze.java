@@ -5,7 +5,6 @@ import java.util.Stack;
 
 public class Maze {
     public ArrayList<MazeField> fields;
-
     public ArrayList<ErrorHandler> errorListeners= new ArrayList<ErrorHandler>();
     private int entryX;
     private int entryY;
@@ -34,12 +33,10 @@ public class Maze {
                 fields.add(new MazeField(line.charAt(i), i, j));
         }
 
-
         graph = new MazeGraph(columnNumber, rowNumber);
         buildGraph();
 
         setHoles();
-
     }
 
     public void draw(Graphics2D g2D) {
@@ -99,6 +96,18 @@ public class Maze {
         }
     }
 
+    public void clearSolutionPath() {
+        if (solutionPath != null) {
+            for (Node n : solutionPath) {
+                MazeField field = getFieldAt(n.getXCoordinate(), n.getYCoordinate());
+                if (field != null && field.isPath()) {
+                    field.setColor(Color.WHITE); // Reset to original color for path
+                }
+            }
+            solutionPath = null;
+        }
+    }
+
     public int getColumnsNumber() {
         return this.columnNumber;
     }
@@ -146,13 +155,8 @@ public class Maze {
         Node start = graph.getNodeAt(x, y);
         if (start != null) {
             graph.setBeginningNode(start);
-            if(lastStartPoint!=null){
-                lastStartPoint.setHighlight(false);
-                
-            }
-            lastStartPoint=getFieldAt(x,y);
         } else {
-            System.out.println("Invalid start point: (" + x + ", " + y + ")");
+            System.out.println("Niepoprawny punkt początkowy: (" + x + ", " + y + ")");
         }
     }
 
@@ -160,14 +164,8 @@ public class Maze {
         Node end = graph.getNodeAt(x, y);
         if (end != null) {
             graph.setEndNode(end);
-              if(lastEndPoint!=null){
-                lastEndPoint.setHighlight(false);
-                
-            }
-            lastEndPoint=getFieldAt(x,y);
         } else {
-            //Można dodać obsługę błędu
-            System.out.println("Invalid end point: (" + x + ", " + y + ")");
+            System.out.println("Niepoprawny punkt końcowy: (" + x + ", " + y + ")");
         }
     }
 
@@ -185,7 +183,7 @@ public class Maze {
         }
     }
 
-   
+
     private void setHoles(){
         String line=null;
         for(int j=0;j<lines.size();j++){
@@ -195,8 +193,8 @@ public class Maze {
                     entryY=j;
                     entryX=i;
                 }
-                    
-            
+
+
 				else if(line.charAt(i)=='K'){
                     exitY=j;
                     exitX=i;
@@ -216,7 +214,7 @@ public class Maze {
     public void setSolution(MazeSolution s){
         solution=s;
     }
-    
+
     public MazeSolution getSolution(){
         return this.solution;
     }

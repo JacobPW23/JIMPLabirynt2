@@ -9,8 +9,8 @@ import java.awt.event.ItemListener;
 
 public class MainView extends JFrame {
 
-    public final static String SHORTEST_PATH = "Solution: Any Path";
-    public final static String ANY_PATH = "Solution: Any Path";
+    public final static String SHORTEST_PATH = "Rozwiązanie: Najkrótsza ścieżka";
+    public final static String ANY_PATH = "Rozwiązanie: Dowolna ścieżka";
     private JPanel topPanel;
     private JMenuBar menuBar;
     private JMenu fileMenu;
@@ -61,9 +61,9 @@ public class MainView extends JFrame {
 
         menuBar = new JMenuBar();
 
-        fileMenu = new JMenu("File");
+        fileMenu = new JMenu("Plik");
 
-        solutionMenu = new JMenu("Solution");
+        solutionMenu = new JMenu("Rozwiązanie");
 
         JPanel topRightPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         topRightPanel.setBackground(Color.LIGHT_GRAY);
@@ -71,9 +71,9 @@ public class MainView extends JFrame {
         setAlgorithm.setSelectedIndex(0);
         topRightPanel.add(setAlgorithm);
 
-        openFileItem = new JMenuItem("Open maze file");
-        saveAsCompressedItem = new JMenuItem("Save as compressed file");
-        saveSolutionItem = new JMenuItem("Save solution");
+        openFileItem = new JMenuItem("Otwórz plik z labiryntem");
+        saveAsCompressedItem = new JMenuItem("Zapisz labirynt jako plik skompresowany");
+        saveSolutionItem = new JMenuItem("Zapisz rozwiązanie");
 
         fileMenu.add(openFileItem);
         fileMenu.add(saveAsCompressedItem);
@@ -90,10 +90,10 @@ public class MainView extends JFrame {
         JPanel activitiesPanel = new JPanel();
         activitiesPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
 
-        startPointButton = new JButton("Point beginning");
-        endPointButton = new JButton("Point end");
+        startPointButton = new JButton("Wskaż początek");
+        endPointButton = new JButton("Wskaż koniec");
         addIndirectPointButton = new JButton("Dodaj punkt pośredni");
-        findSolutionButton = new JButton("Find solution");
+        findSolutionButton = new JButton("Znajdź rozwiązanie");
 
         activitiesPanel.add(startPointButton);
         activitiesPanel.add(endPointButton);
@@ -130,7 +130,7 @@ public class MainView extends JFrame {
         leftPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
         leftPanel.add(errorLabel);
         bottomPanel.add(leftPanel);
-        pathModeLabel = new JLabel("Solution: Any path");
+        pathModeLabel = new JLabel("Rozwiązanie: Dowolna ścieżka");
         pathModeLabel.setBorder(new EmptyBorder(0, 10, 0, 10));
         rightPanel.add(pathModeLabel);
         xCoordinateLabel = new JLabel("X: -");
@@ -209,9 +209,8 @@ public class MainView extends JFrame {
         mazePanel.repaint();
     }
 
-
     public void displayError(Exception ex){
-        errorLabel.setText(errorLabel.getText()+" Błąd: "+ ex.getMessage());
+        errorLabel.setText(" Błąd: "+ ex.getMessage());
         errorLabel.setForeground(Color.RED);
     }
 

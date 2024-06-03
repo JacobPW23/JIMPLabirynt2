@@ -43,26 +43,22 @@ class InterfaceController implements ErrorHandler, CLIListener {
             if (column >= 0 && column < maze.getColumnsNumber() && row >= 0 && row < maze.getRowsNumber()) {
                 if (view.getMazeStage().getPointingMode() == MazePanel.START_POINTING_MODE) {
                     maze.setStartPoint(column, row);
-                    
                 } else if (view.getMazeStage().getPointingMode() == MazePanel.END_POINTING_MODE) {
                     maze.setEndPoint(column, row);
-                    
                 }
                 view.updateMaze(maze);
                 view.unlockPointButtons();
             } else {
-                System.out.println("Clicked outside maze boundaries");
+                view.displayError(new Exception("Kliknięcie poza labiryntem"));
             }
-            clearPointer();
             view.getMazeStage().setPointingMode(MazePanel.NO_POINTING_MODE);
-            
+            view.getMazeStage().clearHighlighted();
         }
 
         @Override
         public void mouseExited(MouseEvent e) {
             view.setNoCoordinates();
-            if(view.getMazeStage().getPointingMode()!=MazePanel.NO_POINTING_MODE)
-                clearPointer();
+            clearPointer();
         }
 
         public void updatePointer(int x, int y) {
@@ -156,33 +152,34 @@ class InterfaceController implements ErrorHandler, CLIListener {
 
     }
     private void setStartPoint() {
+        view.getMazeStage().clearPath();
         view.getMazeStage().setPointingMode(MazePanel.START_POINTING_MODE);
         view.lockPointButtons();
         view.requestFocus();
     }
 
     private void setEndPoint() {
+        view.getMazeStage().clearPath();
         view.getMazeStage().setPointingMode(MazePanel.END_POINTING_MODE);
         view.lockPointButtons();
         view.requestFocus();
     }
 
     private void findSolution() {
-        view.getMazeStage().setPointingMode(MazePanel.NO_POINTING_MODE);
         if (view.getMazeStage().getMaze() != null) {
             MazeGraph graph = view.getMazeStage().getMaze().getGraph();
 
             for (Node node : graph.getNodes()) {
                 node.setVisited(false);
             }
-            maze.resetPathDrawing();
+
             solver = new MazeSolver(graph);
 
             if (solver.solve()) {
                 view.getMazeStage().getMaze().setSolution(solver.getSolution());
                 view.updateMaze(view.getMazeStage().getMaze());
             } else {
-                view.displayError(new Exception("No solution found"));
+                view.displayError(new Exception("Nie znaleziono rozwiązania"));
             }
         }
     }
@@ -202,33 +199,25 @@ class InterfaceController implements ErrorHandler, CLIListener {
         findSolution();
     }
 
-  
+
     private void loadMaze(String path){
         try{
-
-                view.clearError();
-                maze=null;
-                if(path.substring(path.lastIndexOf(".")).equals(".bin"))
-                    maze=reader.readCompressedMaze(path);
-                else if(path.substring(path.lastIndexOf(".")).equals(".txt"))
-                    maze= reader.readMaze(path);
-                maze.buildGraph();
-                maze.defaultBounds(maze.getGraph());
-
-                view.updateMaze(maze);
-                
-                view.getStageContainer().revalidate();
-                view.getStageContainer().repaint();
-                view.unlockPointButtons();
-                
+            view.clearError();
+            maze=null;
+            if(path.substring(path.lastIndexOf(".")).equals(".bin"))
+                maze=reader.readCompressedMaze(path);
+            else if(path.substring(path.lastIndexOf(".")).equals(".txt"))
+                maze= reader.readMaze(path);
+            maze.buildGraph();
+            maze.defaultBounds(maze.getGraph());
+            view.updateMaze(maze);
+            view.getStageContainer().revalidate();
+            view.getStageContainer().repaint();
+            view.unlockPointButtons();
         }
         catch (Exception ex) {
-            
-            view.displayError(new Exception("Failed to load file"));
-
+            view.displayError(new Exception("Nie udało się załadować labiryntu"));
         }
     }
-
-
 }
 
