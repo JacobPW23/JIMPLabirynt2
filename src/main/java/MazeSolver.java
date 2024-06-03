@@ -39,10 +39,25 @@ public class MazeSolver {
             solutionStack.push(currentNode);
             currentNode = parentMap.get(currentNode);
         }
+        reverseStack();
     }
 
     public Stack<Node> getSolutionStack() {
         return solutionStack;
+    }
+
+    public MazeSolution getSolution(){
+
+        return new MazeSolution(new ArrayList<Node>(solutionStack));
+    }
+
+    private void reverseStack(){
+
+        for(int i=0;i<solutionStack.size()/2;i++){
+            Node tmp = solutionStack.get(i);
+            solutionStack.set(i,solutionStack.get(solutionStack.size()-i-1));
+            solutionStack.set(solutionStack.size()-i-1,tmp);
+        }
     }
 }
 

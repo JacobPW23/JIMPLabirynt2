@@ -10,6 +10,7 @@ class InterfaceController implements ErrorHandler, CLIListener {
     private MainView view;
     private Maze maze;
     private MazeReader reader;
+    private MazeWriter writer;
     private MazeSolver solver;
     private CLIManager commandManager;
 
@@ -96,6 +97,7 @@ class InterfaceController implements ErrorHandler, CLIListener {
         this.view = view;
 
         reader = new MazeReader();
+        writer=new MazeWriter();
         reader.addErrorListener(this);
         view.addOpenFileListener(e -> openFile());
         view.addSaveCompressedListener(e->saveAsCompressed());
@@ -136,7 +138,7 @@ class InterfaceController implements ErrorHandler, CLIListener {
         fileDialog.setCurrentDirectory(new File("src/main/resources"));
         int val = fileDialog.showSaveDialog(this.view);
         if (val == JFileChooser.APPROVE_OPTION) {
-            //loadMaze(fileDialog.getSelectedFile().getAbsolutePath());
+            writer.writeCompressedMaze(maze,fileDialog.getSelectedFile().getAbsolutePath());
         }
 
     }
@@ -148,7 +150,8 @@ class InterfaceController implements ErrorHandler, CLIListener {
         fileDialog.setCurrentDirectory(new File("src/main/resources"));
         int val = fileDialog.showSaveDialog(this.view);
         if (val == JFileChooser.APPROVE_OPTION) {
-            //loadMaze(fileDialog.getSelectedFile().getAbsolutePath());
+            if(maze!=null && maze.getSolution()!=null)
+                writer.writePlainSolution(maze,fileDialog.getSelectedFile().getAbsolutePath());
         }
 
     }
@@ -176,7 +179,7 @@ class InterfaceController implements ErrorHandler, CLIListener {
             solver = new MazeSolver(graph);
 
             if (solver.solve()) {
-                view.getMazeStage().getMaze().setSolutionPath(solver.getSolutionStack());
+                view.getMazeStage().getMaze().setSolution(solver.getSolution());
                 view.updateMaze(view.getMazeStage().getMaze());
             } else {
                 view.displayError(new Exception("No solution found"));
@@ -211,8 +214,9 @@ class InterfaceController implements ErrorHandler, CLIListener {
                     maze= reader.readMaze(path);
                 maze.buildGraph();
                 maze.defaultBounds(maze.getGraph());
+
                 view.updateMaze(maze);
-                view.getMazeStage().setMaze(maze);
+                
                 view.getStageContainer().revalidate();
                 view.getStageContainer().repaint();
                 view.unlockPointButtons();

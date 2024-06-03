@@ -42,14 +42,15 @@ public class MazeWriter{
         maze.lines.set(entryY,MazeReader.replaceAt(maze.lines.get(entryY),entryX,' '));
 		maze.lines.set(exitY,MazeReader.replaceAt(maze.lines.get(exitY),exitX,' '));
         prepareLineWords(maze.lines);
-
+        
         //write4BInLittleEndian(CodeWords.size());
         write4BInLittleEndian(wordCounter);
         
         //offset
-
-         write4BInLittleEndian(0);
-
+        if(maze.getSolution()!=null)
+            write4BInLittleEndian(1);
+        else
+            write4BInLittleEndian(0);
         writer.writeByte(SEPARATOR);
         writer.writeByte(WALL);
         writer.writeByte(PATH);
@@ -58,16 +59,28 @@ public class MazeWriter{
         //field code words
         
         for(CodeWord word:fieldCodeWords){
-            word.wrteToStream(writer);
+            word.writeToStream(writer);
             
         }
-
         
+        if(maze.getSolution()!=null){
+        prepareSolution(maze.getSolution().getInShortFormat());
+        //solution header
+
+        write4BInLittleEndian(FILE_ID);
+        writer.writeByte(maze.getSolution().getInShortFormat().size()-1);
+
+        //solution words
+        for(CodeWord word:solutionCodeWords)
+            word.writeToStream(writer);
         }
+         writer.close();
+        }
+       
         catch(Exception ex){
-
+            ex.printStackTrace();
         }
-
+        
     }
 
     private void write2BInLittleEndian(char x){
@@ -172,7 +185,10 @@ public class MazeWriter{
         // And of course it should be remebered that solution step might be longer than 256 fileds so it must be divided into more than single one-byte word
         // in simmilar manner as it is done in prepareLineWords method.
 
-
+        solutionCodeWords=new ArrayList<CodeWord>();
+        for(String instruction: lines){
+            solutionCodeWords.add(new CodeWord(-1,instruction.charAt(0),Integer.parseInt(instruction.substring(1))-1));
+        }
     }
     
 
@@ -187,18 +203,24 @@ public class MazeWriter{
             sumCount=c;
         }
 
-        public void wrteToStream(DataOutputStream writer){
+        
+        public void writeToStream(DataOutputStream writer){
 
             int cycles= sumCount>256 ? sumCount/256 :0;
             int offset = sumCount%256;
             try{
                 for(int i=0;i<cycles;i++){
-                    writer.writeByte(separator);
-                    writer.writeByte(value);
+                    if(separator>=0)
+                        writer.writeByte(separator);
+                    if(value>=0)
+                        writer.writeByte(value);
+                    
                     writer.writeByte(255);
                 }
                     if(offset!=0){
-                        writer.writeByte(separator);
+                        if(separator>=0)
+                            writer.writeByte(separator);
+                        if(value>=0)
                         writer.writeByte(value);
                         writer.writeByte(offset-1);
                     }
@@ -208,6 +230,22 @@ public class MazeWriter{
             catch(Exception ex){}
         }
         
+    }
+
+    public void writePlainSolution(Maze m, String path){
+
+        try{
+        BufferedWriter bwriter = new BufferedWriter(new FileWriter(new File(path)));
+        
+        for(String line:m.getSolution().getInPlainFormat())
+            bwriter.write(line,0,line.length());
+      
+        bwriter.close();
+    }
+    catch(Exception ex){
+        ex.printStackTrace();
+    }
+    
     }
     
 }

@@ -19,6 +19,7 @@ public class Maze {
     private MazeGraph graph;
     private MazeField lastStartPoint;
     private MazeField lastEndPoint;
+    private MazeSolution solution;
 
     public Maze(ArrayList<String> lines) {
         if (lines.isEmpty()) return;
@@ -46,8 +47,8 @@ public class Maze {
             field.draw(g2D);
         }
 
-        if (solutionPath != null) {
-            for (Node n : solutionPath) {
+        if (solution != null) {
+            for (Node n : solution.getNodes()) {
                 MazeField field = getFieldAt(n.getXCoordinate(), n.getYCoordinate());
                 field.setColor(Color.GREEN);
                 field.draw(g2D);
@@ -137,6 +138,10 @@ public class Maze {
         this.solutionPath = new ArrayList<>(solutionPath);
     }
 
+    public List<Node> getSolutionPath(){
+        return this.solutionPath;
+    }
+
     public void setStartPoint(int x, int y) {
         Node start = graph.getNodeAt(x, y);
         if (start != null) {
@@ -207,6 +212,12 @@ public class Maze {
                 field.setDefaultColor();
             }
     }
-      
+
+    public void setSolution(MazeSolution s){
+        solution=s;
+    }
     
+    public MazeSolution getSolution(){
+        return this.solution;
+    }
 }

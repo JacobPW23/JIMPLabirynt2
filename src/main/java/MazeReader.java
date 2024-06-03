@@ -9,7 +9,7 @@ public class MazeReader {
 	private ArrayList<ErrorHandler> errorListeners= new ArrayList<ErrorHandler>();
 	private int fileId;
 	private int solutionId;
-
+	private MazeSolution readSolution;
 	public Maze readMaze(String path) {
 
 
@@ -305,6 +305,7 @@ public class MazeReader {
 			//solution steps
 			char directionField;
 			int step;
+			ArrayList<ArrayList<String>> solutionSteps= new ArrayList<ArrayList<String>>();
 			for(int j=0;j<=solutionStepsNumber;j++){
 
                     if(reader.read(buffer,0,1)!=1){
@@ -321,9 +322,13 @@ public class MazeReader {
                     //Above instructions do not exclude maze loading, but only path becacuse of path's optional character
 
                     //here it should be put in some solution container
+					solutionSteps.add(new ArrayList<String>());
+					solutionSteps.get(j).add(""+directionField);
+					solutionSteps.get(j).add(""+step);
+
 
 			}
-                    
+            readSolution= new MazeSolution(solutionSteps,new Node(entryX-1,entryY-1),new Node(exitX-1,exitY-1));
 			
 
 			if(!isFileValid(mazeLines)){
@@ -332,13 +337,15 @@ public class MazeReader {
 				return null;
 
 			}
-
+			reader.close();
 
 		}
 		catch(Exception ex){
 
 		}
-		return new Maze(mazeLines);
+		Maze result=new Maze(mazeLines);
+		result.setSolution(readSolution);
+		return result;
 	}
 
 }
