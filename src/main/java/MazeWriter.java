@@ -13,7 +13,14 @@ public class MazeWriter{
     private ArrayList<CodeWord> solutionCodeWords;
     private DataOutputStream writer;
     private int wordCounter=0;
-    
+    private int solutionStartX;
+    private int solutionStartY;
+    private int solutionEndX;
+    private int solutionEndY;
+    private int entryX;
+    private int entryY;
+    private int exitX;
+    private int exitY;
     public void writeCompressedMaze(Maze maze,String path){
         try{
             writer = new DataOutputStream(new FileOutputStream(new File(path)));
@@ -35,10 +42,10 @@ public class MazeWriter{
         write4BInLittleEndian(0);
         write4BInLittleEndian(0);
 
-        int entryX=(int)entry.getX();
-        int entryY=(int)entry.getY();
-        int exitX=(int)exit.getX();
-        int exitY=(int)exit.getY();
+        entryX=(int)entry.getX();
+        entryY=(int)entry.getY();
+        exitX=(int)exit.getX();
+        exitY=(int)exit.getY();
         maze.lines.set(entryY,MazeReader.replaceAt(maze.lines.get(entryY),entryX,' '));
 		maze.lines.set(exitY,MazeReader.replaceAt(maze.lines.get(exitY),exitX,' '));
         prepareLineWords(maze.lines);
@@ -47,7 +54,7 @@ public class MazeWriter{
         write4BInLittleEndian(wordCounter);
         
         //offset
-        if(maze.getSolution()!=null)
+        if(solutionValid(maze))
             write4BInLittleEndian(1);
         else
             write4BInLittleEndian(0);
@@ -62,8 +69,13 @@ public class MazeWriter{
             word.writeToStream(writer);
             
         }
-        
-        if(maze.getSolution()!=null){
+        solutionStartX=maze.getSolution().getNodes().get(0).getXCoordinate();
+        solutionStartY= maze.getSolution().getNodes().get(0).getYCoordinate();
+        solutionEndX=maze.getSolution().getNodes().get(maze.getSolution().getNodes().size()-1).getXCoordinate();
+        solutionEndY=maze.getSolution().getNodes().get(maze.getSolution().getNodes().size()-1).getYCoordinate();
+
+
+        if(solutionValid(maze)){
         prepareSolution(maze.getSolution().getInShortFormat());
         //solution header
 
@@ -248,4 +260,7 @@ public class MazeWriter{
     
     }
     
+    private boolean solutionValid(Maze maze){
+        return maze.getSolution()!=null && entryX+1==solutionStartX && entryY==solutionStartY && exitY==solutionEndY && exitX-1==solutionEndX;
+    }
 }
