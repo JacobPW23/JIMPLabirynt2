@@ -1,6 +1,7 @@
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.List;
 
 public class MazePanel extends JPanel {
 
@@ -29,7 +30,7 @@ public class MazePanel extends JPanel {
         wallColor = Color.BLACK;
         pathColor = Color.WHITE;
         pointingColor = Color.RED;
-        solutionPathColor = Color.ORANGE;
+        solutionPathColor = Color.GREEN;
         drawingXBeginning = 0;
         drawingYBeginning = 0;
     }
@@ -50,10 +51,28 @@ public class MazePanel extends JPanel {
     }
 
     public void clearHighlighted() {
-        if (previousHighlighted != null) {
+        if(previousHighlighted != null){
+        int prevX=(int)(previousHighlighted.getShape().getX())/10;
+        int prevY=(int)(previousHighlighted.getShape().getY())/10;
+        int startX=maze.getGraph().getBeginningNode().getXCoordinate();
+        int startY=maze.getGraph().getBeginningNode().getYCoordinate();
+        int endX=maze.getGraph().getEndNode().getXCoordinate();
+        int endY=maze.getGraph().getEndNode().getYCoordinate();
+
+        if ( (prevX!=startX || prevY!=startY) && (prevX!=endX  || prevY!=endY)) {
             previousHighlighted.setHighlight(false);
             repaint();
+            //System.out.print(""+prevX+" "+prevY);
             previousHighlighted = null;
+
+        }
+        }
+    }
+
+    public void clearPath() {
+        if (maze != null) {
+            maze.clearSolutionPath();
+            repaint();
         }
     }
 
@@ -74,11 +93,11 @@ public class MazePanel extends JPanel {
         return POINTING_MODE;
     }
 
-    public float getDrawingXBeginning() {
+    public int getDrawingXBeginning() {
         return drawingXBeginning;
     }
 
-    public float getDrawingYBeginning() {
+    public int getDrawingYBeginning() {
         return drawingYBeginning;
     }
 
@@ -88,6 +107,10 @@ public class MazePanel extends JPanel {
         } else {
             return new Dimension(maze.getRowsNumber(), maze.getColumnsNumber());
         }
+    }
+
+    public Maze getMaze() {
+        return maze;
     }
 
     @Override

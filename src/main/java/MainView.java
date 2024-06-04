@@ -9,8 +9,8 @@ import java.awt.event.ItemListener;
 
 public class MainView extends JFrame {
 
-    public final static String SHORTEST_PATH = "Algorytm: Najkrótsza ścieżka";
-    public final static String ANY_PATH = "Algorytm: Dowolna ścieżka";
+    public final static String SHORTEST_PATH = "Rozwiązanie: Najkrótsza ścieżka";
+    public final static String ANY_PATH = "Rozwiązanie: Dowolna ścieżka";
     private JPanel topPanel;
     private JMenuBar menuBar;
     private JMenu fileMenu;
@@ -21,7 +21,7 @@ public class MainView extends JFrame {
     private JComboBox setAlgorithm;
 
     private JPanel centerPanel;
-    private MazePanel stage;
+    private MazePanel mazePanel;
     private JPanel basePanel;
     private JPanel bottomPanel;
     private JButton findSolutionButton;
@@ -67,7 +67,7 @@ public class MainView extends JFrame {
 
         JPanel topRightPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         topRightPanel.setBackground(Color.LIGHT_GRAY);
-        setAlgorithm = new JComboBox<String>(new String[]{"DFS", "BFS", "A*"});
+        setAlgorithm = new JComboBox<String>(new String[]{"BFS", "DFS", "A*"});
         setAlgorithm.setSelectedIndex(0);
         topRightPanel.add(setAlgorithm);
 
@@ -101,6 +101,7 @@ public class MainView extends JFrame {
         activitiesPanel.add(findSolutionButton);
         activitiesPanel.setBackground(Color.LIGHT_GRAY);
         basePanel.add(activitiesPanel);
+        lockPointButtons();
         return basePanel;
 
     }
@@ -111,8 +112,8 @@ public class MainView extends JFrame {
         stageContainer.getVerticalScrollBar().setUnitIncrement(16);
 
         stageContainer.setAlignmentX(SwingConstants.CENTER);
-        stage = new MazePanel();
-        stageContainer.setViewportView(stage);
+        mazePanel = new MazePanel();
+        stageContainer.setViewportView(mazePanel);
         stageContainer.getViewport().setScrollMode(JViewport.BACKINGSTORE_SCROLL_MODE);
         add(stageContainer, BorderLayout.CENTER);
 
@@ -129,7 +130,7 @@ public class MainView extends JFrame {
         leftPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
         leftPanel.add(errorLabel);
         bottomPanel.add(leftPanel);
-        pathModeLabel = new JLabel("Algorytm: Dowolna ścieżka");
+        pathModeLabel = new JLabel("Rozwiązanie: Dowolna ścieżka");
         pathModeLabel.setBorder(new EmptyBorder(0, 10, 0, 10));
         rightPanel.add(pathModeLabel);
         xCoordinateLabel = new JLabel("X: -");
@@ -144,7 +145,7 @@ public class MainView extends JFrame {
     }
 
     public MazePanel getMazeStage() {
-        return stage;
+        return mazePanel;
     }
 
     public JScrollPane getStageContainer() {
@@ -161,10 +162,10 @@ public class MainView extends JFrame {
     }
 
     public void setCurrentCoordinates(float x, float y) {
-        int row = (int) (y - stage.getDrawingYBeginning()) / 10;
-        int column = (int) (x - stage.getDrawingXBeginning()) / 10;
+        int row = (int) (y - mazePanel.getDrawingYBeginning()) / 10;
+        int column = (int) (x - mazePanel.getDrawingXBeginning()) / 10;
 
-        Dimension size = stage.getMazeSize();
+        Dimension size = mazePanel.getMazeSize();
 
         if (row >= 0 && row < size.getHeight() && column >= 0 && column < size.getWidth()) {
             xCoordinateLabel.setText("X: " + column);
@@ -203,8 +204,13 @@ public class MainView extends JFrame {
         pathModeLabel.setText(description);
     }
 
+    public void updateMaze(Maze maze) {
+        mazePanel.setMaze(maze);
+        mazePanel.repaint();
+    }
+
     public void displayError(Exception ex){
-        errorLabel.setText(errorLabel.getText()+" Błąd: "+ ex.getMessage());
+        errorLabel.setText(" Błąd: "+ ex.getMessage());
         errorLabel.setForeground(Color.RED);
     }
 
@@ -212,6 +218,7 @@ public class MainView extends JFrame {
         errorLabel.setText("");
         errorLabel.setForeground(Color.BLACK);
     }
+
     public void addOpenFileListener(ActionListener listener) {
         openFileItem.addActionListener(listener);
     }
@@ -220,14 +227,27 @@ public class MainView extends JFrame {
         startPointButton.addActionListener(listener);
     }
 
+    public void addEndPointListener(ActionListener listener) {
+
+        endPointButton.addActionListener(listener);
+    }
+
+    public void addFindSolutionListener(ActionListener listener) {
+        findSolutionButton.addActionListener(listener);
+    }
+
     public void addOnMazeMouseMovedListener(MouseAdapter listener) {
 
-        stage.addMouseMotionListener(listener);
+        mazePanel.addMouseMotionListener(listener);
+    }
+
+    public void addOnMazeMouseClickedListener(MouseListener listener) {
+        mazePanel.addMouseListener(listener);
     }
 
     public void addOnMazeMouseExitedListener(MouseListener listener) {
 
-        stage.addMouseListener(listener);
+        mazePanel.addMouseListener(listener);
     }
 
     public void addPointingModeEscapeListener(KeyListener listener) {
@@ -235,13 +255,16 @@ public class MainView extends JFrame {
         addKeyListener(listener);
     }
 
-    public void addEndPointListener(ActionListener listener) {
-
-        endPointButton.addActionListener(listener);
-    }
-
     public void addAlgoChangeListener(ItemListener listener) {
         setAlgorithm.addItemListener(listener);
+    }
+
+    public void addSaveCompressedListener(ActionListener listener) {
+        saveAsCompressedItem.addActionListener(listener);
+    }
+
+    public void addSaveSolutionListener(ActionListener listener) {
+        saveSolutionItem.addActionListener(listener);
     }
 }
 

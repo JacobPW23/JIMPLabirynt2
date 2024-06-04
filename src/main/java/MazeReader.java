@@ -1,75 +1,63 @@
-import java.io.*;
+import java.io.DataInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.*;
 
-
 public class MazeReader {
-
 	private ArrayList<String> mazeLines;
 	private ArrayList<ErrorHandler> errorListeners= new ArrayList<ErrorHandler>();
 	private int fileId;
 	private int solutionId;
-
+	private MazeSolution readSolution;
 	public Maze readMaze(String path) {
+        ArrayList<String> mazeLines = new ArrayList<String>();
 
+        String data;
+        try {
+            File myObj = new File(path);
+            Scanner myReader = new Scanner(myObj);
+            while (myReader.hasNextLine()) {
+                data = myReader.nextLine();
+                mazeLines.add(data);
+            }
+            myReader.close();
 
-		ArrayList<String> mazeLines = new ArrayList<String>();
+        } catch (FileNotFoundException e) {
+            notifyListeners(new Exception("Brak pliku lub brak dostępu"));
+            return null;
+        }
+        if(!isFileValid(mazeLines)){
+            notifyListeners(new Exception("Plik jest niepoprawny"));
+            throw new IllegalArgumentException("Niepoprawny plik");
+        }
+        return new Maze(mazeLines);
+    }
 
-		String data;
-		try {
-			File myObj = new File(path);
-			Scanner myReader = new Scanner(myObj);
-			while (myReader.hasNextLine()) {
+    private boolean isFileValid(ArrayList<String> mazeLines) {
+        if (mazeLines.isEmpty() || mazeLines.get(0).isEmpty())
+            return false;
+        int lineLength = mazeLines.get(0).length();
+        for (int j = 0; j < mazeLines.size(); j++) {
+            String line = mazeLines.get(j);
+            if(line.length()!=lineLength)
+                return false;
+            for (int i = 0; i < line.length(); i++) {
+                char testedElem = line.charAt(i);
+                if (testedElem != ' ' && testedElem != 'X' && testedElem != 'K' && testedElem != 'P')
+                    return false;
+            }
+        }
+        return true;
+    }
 
-				data = myReader.nextLine();
-
-				mazeLines.add(data);
-			}
-			myReader.close();
-
-
-		} catch (FileNotFoundException e) {
-			//System.out.println("Wystąpił błąd: brak pliku lub brak dostępu");
-			notifyListeners(new Exception("Brak pliku lub brak dostępu"));
-			return null;
-
-		}
-		if(!isFileValid(mazeLines)){
-			//System.out.println("Wystąpił błąd: plik jest niepoprawny");
-			notifyListeners(new Exception("Plik jest niepoprawny"));
-			throw new IllegalArgumentException("Invalid file");
-
-		}
-
-
-		return new Maze(mazeLines);
-	}
-
-	private boolean isFileValid(ArrayList<String> mazeLines) {
-		if (mazeLines.isEmpty() || mazeLines.get(0).isEmpty())
-			return false;
-		int lineLength = mazeLines.get(0).length();
-		for (int j = 0; j < mazeLines.size(); j++) {
-			String line = mazeLines.get(j);
-			if(line.length()!=lineLength)
-				return false;
-			for (int i = 0; i < line.length(); i++) {
-				char testedElem = line.charAt(i);
-				if (testedElem != ' ' && testedElem != 'X' && testedElem != 'K' && testedElem != 'P')
-					return false;
-			}
-		}
-		return true;
-	}
-
-	public void addErrorListener(ErrorHandler handler){
-
-		errorListeners.add(handler);
-	}
+    public void addErrorListener(ErrorHandler handler){
+        errorListeners.add(handler);
+    }
 
 	public void notifyListeners(Exception ex){
-
 		for(ErrorHandler l: errorListeners)
 			l.handleError(ex);
 
@@ -112,234 +100,179 @@ public class MazeReader {
 		int currentColumn=0;
 		int currentRow=0;
 		mazeLines= new ArrayList<String>();
-		try{
+		try {
 			DataInputStream reader = new DataInputStream(new FileInputStream(new File(Path)));
-
 			//header
-			if(reader.read(buffer,0,4)!=4){
-
+			if (reader.read(buffer, 0, 4) != 4) {
 				notifyListeners(new Exception("Uszkodzony nagłówek"));
 				return null;
-			}
-			else fileId=byteArrayToInt(buffer,4);
+			} else fileId = byteArrayToInt(buffer, 4);
 
-			if(reader.read(buffer,0,1)!=1){
-
+			if (reader.read(buffer, 0, 1) != 1) {
 				notifyListeners(new Exception("Uszkodzony nagłówek"));
 				return null;
 			}
 
-			if(reader.read(buffer,0,2)!=2) {
-
+			if (reader.read(buffer, 0, 2) != 2) {
 				notifyListeners(new Exception("Uszkodzony nagłówek"));
 				return null;
-			}
-			else columns=byteArrayToInt(buffer,2);
+			} else columns = byteArrayToInt(buffer, 2);
 
 
-			if(reader.read(buffer,0,2)!=2){
-
+			if (reader.read(buffer, 0, 2) != 2) {
 				notifyListeners(new Exception("Uszkodzony nagłówek"));
 				return null;
-			}
-			else rows=byteArrayToInt(buffer,2);
+			} else rows = byteArrayToInt(buffer, 2);
 
-			if(reader.read(buffer,0,2)!=2){
-
+			if (reader.read(buffer, 0, 2) != 2) {
 				notifyListeners(new Exception("Uszkodzony nagłówek"));
 				return null;
-			}
-			else entryX=byteArrayToInt(buffer,2)-1;
+			} else entryX = byteArrayToInt(buffer, 2) - 1;
 
-			if(reader.read(buffer,0,2)!=2){
-
+			if (reader.read(buffer, 0, 2) != 2) {
 				notifyListeners(new Exception("Uszkodzony nagłówek"));
 				return null;
-			}
-			else entryY=byteArrayToInt(buffer,2)-1;
+			} else entryY = byteArrayToInt(buffer, 2) - 1;
 
-			if(reader.read(buffer,0,2)!=2){
-
+			if (reader.read(buffer, 0, 2) != 2) {
 				notifyListeners(new Exception("Uszkodzony nagłówek"));
 				return null;
-			}
-			else exitX=byteArrayToInt(buffer,2)-1;
+			} else exitX = byteArrayToInt(buffer, 2) - 1;
 
-			if(reader.read(buffer,0,2)!=2){
-
+			if (reader.read(buffer, 0, 2) != 2) {
 				notifyListeners(new Exception("Uszkodzony nagłówek"));
 				return null;
-			}
-			else exitY=byteArrayToInt(buffer,2)-1;
+			} else exitY = byteArrayToInt(buffer, 2) - 1;
 
-			if(reader.skipBytes(12)!=12)
+			if (reader.skipBytes(12) != 12)
 				notifyListeners(new Exception("Uszkodzony nagłówek"));
-			if(reader.read(buffer,0,4)!=4){
 
-				notifyListeners(new Exception("Uszkodzony nagłówek"));
-				return null;
-			}
-			else counter=byteArrayToInt(buffer,4);
-
-			if(reader.read(buffer,0,4)!=4){
-
+			if (reader.read(buffer, 0, 4) != 4) {
 				notifyListeners(new Exception("Uszkodzony nagłówek"));
 				return null;
-			}
-			else solutionOffset=byteArrayToInt(buffer,4);
+			} else counter = byteArrayToInt(buffer, 4);
 
-			if(reader.read(buffer,0,1)!=1){
-
+			if (reader.read(buffer, 0, 4) != 4) {
 				notifyListeners(new Exception("Uszkodzony nagłówek"));
 				return null;
-			}
-			else separator=byteArrayToInt(buffer,1);
+			} else solutionOffset = byteArrayToInt(buffer, 4);
 
-			if(reader.read(buffer,0,1)!=1){
-
+			if (reader.read(buffer, 0, 1) != 1) {
 				notifyListeners(new Exception("Uszkodzony nagłówek"));
 				return null;
-			}
-			else wall=byteArrayToInt(buffer,1);
+			} else separator = byteArrayToInt(buffer, 1);
 
-			if(reader.read(buffer,0,1)!=1){
-
+			if (reader.read(buffer, 0, 1) != 1) {
 				notifyListeners(new Exception("Uszkodzony nagłówek"));
 				return null;
-			}
-			else path=byteArrayToInt(buffer,1);
+			} else wall = byteArrayToInt(buffer, 1);
+
+			if (reader.read(buffer, 0, 1) != 1) {
+				notifyListeners(new Exception("Uszkodzony nagłówek"));
+				return null;
+			} else path = byteArrayToInt(buffer, 1);
 
 			// maze fields
-			String currentLine="";
-			int fieldCounter=0;
-			int fieldQuantity=-1;
-			char fieldChar=0;
-			int lineCount=0;
+			String currentLine = "";
+			int fieldCounter = 0;
+			int fieldQuantity = -1;
+			char fieldChar = 0;
+			int lineCount = 0;
 
-			for(int i=0; i<counter;i++){
+			for (int i = 0; i < counter; i++) {
 
-				if(reader.read(buffer,0,1)!=1){
-
+				if (reader.read(buffer, 0, 1) != 1) {
 					notifyListeners(new Exception("Uszkodzona sekcja słów"));
 					return null;
 				}
 
 
-				if(reader.read(buffer,0,1)!=1){
-
+				if (reader.read(buffer, 0, 1) != 1) {
 					notifyListeners(new Exception("Uszkodzona sekcja słów"));
 					return null;
 				}
-				fieldChar=(char)byteArrayToInt(buffer,1);
-				if(reader.read(buffer,0,1)!=1){
-
+				fieldChar = (char) byteArrayToInt(buffer, 1);
+				if (reader.read(buffer, 0, 1) != 1) {
 					notifyListeners(new Exception("Uszkodzona sekcja słów"));
 					return null;
 				}
 
-
-
-				fieldQuantity=byteArrayToInt(buffer,1);
-				for(int q=0;q<=fieldQuantity;q++){
-					currentLine+=fieldChar;
+				fieldQuantity = byteArrayToInt(buffer, 1);
+				for (int q = 0; q <= fieldQuantity; q++) {
+					currentLine += fieldChar;
 					fieldCounter++;
 					currentColumn++;
 				}
 
-
-
-				if(fieldCounter%columns==0){
-
+				if (fieldCounter % columns == 0) {
 					mazeLines.add(currentLine);
-					currentLine="";
-					currentColumn=0;
+					currentLine = "";
+					currentColumn = 0;
 					currentRow++;
 				}
-
-
-
 			}
 
-			//adding start & end
+			mazeLines.set(entryY, replaceAt(mazeLines.get(entryY), entryX, 'P'));
+			mazeLines.set(exitY, replaceAt(mazeLines.get(exitY), exitX, 'K'));
 
-			mazeLines.set(entryY,replaceAt(mazeLines.get(entryY),entryX,'P'));
-			mazeLines.set(exitY,replaceAt(mazeLines.get(exitY),exitX,'K'));
-
-			
-
-			
-
-
-			
-            if(solutionOffset==0){
-				//it means no solution section
-				if(!isFileValid(mazeLines)){
-
-					notifyListeners(new Exception("Plik jest niepoprawny"));
+			if (solutionOffset == 0) {
+				if (!isFileValid(mazeLines)) {
+					notifyListeners(new Exception("Niepoprawny plik"));
 					return null;
-
 				}
-
 				return new Maze(mazeLines);
 			}
 
-            if(reader.read(buffer,0,4)!=4){
-                notifyListeners(new Exception("Uszkodzony nagłówek rozwiązania"));
-					return null;
-            }
-
-			solutionId=byteArrayToInt(buffer,4);
-
-
-
-
+			if (reader.read(buffer, 0, 4) != 4) {
+				notifyListeners(new Exception("Uszkodzony nagłówek rozwiązania"));
+				return null;
+			}
+			solutionId = byteArrayToInt(buffer, 4);
 
 			int solutionStepsNumber;
 
-			if(reader.read(buffer,0,1)!=1){
-
+			if (reader.read(buffer, 0, 1) != 1) {
 				notifyListeners(new Exception("Uszkodzona sekcja rozwiązania"));
 
 			}
-			solutionStepsNumber=byteArrayToInt(buffer,1);
+			solutionStepsNumber = byteArrayToInt(buffer, 1);
 
 			//solution steps
 			char directionField;
 			int step;
-			for(int j=0;j<=solutionStepsNumber;j++){
+			ArrayList<ArrayList<String>> solutionSteps = new ArrayList<ArrayList<String>>();
+			for (int j = 0; j <= solutionStepsNumber; j++) {
+				if (reader.read(buffer, 0, 1) != 1) {
+					notifyListeners(new Exception("Uszkodzona sekcja rozwiązania"));
+				}
 
-                    if(reader.read(buffer,0,1)!=1){
+				directionField = (char) byteArrayToInt(buffer, 1);
 
-				        notifyListeners(new Exception("Uszkodzona sekcja rozwiązania"));
-                    }
-                    directionField=(char)byteArrayToInt(buffer,1);
+				if (reader.read(buffer, 0, 1) != 1) {
+					notifyListeners(new Exception("Uszkodzona sekcja rozwiązania"));
+				}
 
-                    if(reader.read(buffer,0,1)!=1){
+				step = byteArrayToInt(buffer, 1);
 
-				        notifyListeners(new Exception("Uszkodzona sekcja rozwiązania"));
-                    }
-                    step=byteArrayToInt(buffer,1);
-                    //Above instructions do not exclude maze loading, but only path becacuse of path's optional character
-
-                    //here it should be put in some solution container
-
+				solutionSteps.add(new ArrayList<String>());
+				solutionSteps.get(j).add("" + directionField);
+				solutionSteps.get(j).add("" + step);
 			}
-                    
-			
+			readSolution = new MazeSolution(solutionSteps, new Node(entryX - 1, entryY - 1), new Node(exitX - 1, exitY - 1));
 
-			if(!isFileValid(mazeLines)){
-
-				notifyListeners(new Exception("Plik jest niepoprawny"));
+			if (!isFileValid(mazeLines)) {
+				notifyListeners(new Exception("Invalid file"));
 				return null;
-
 			}
-
+			reader.close();
 
 		}
 		catch(Exception ex){
 
 		}
-		return new Maze(mazeLines);
+		Maze result=new Maze(mazeLines);
+		result.setSolution(readSolution);
+		return result;
 	}
 
 }
