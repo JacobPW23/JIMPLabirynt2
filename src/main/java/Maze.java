@@ -97,14 +97,15 @@ public class Maze {
     }
 
     public void clearSolutionPath() {
-        if (solutionPath != null) {
-            for (Node n : solutionPath) {
+        if (solution != null && solution.getNodes()!=null) {
+            ArrayList<Node> pathNodes = solution.getNodes();
+            for (Node n : pathNodes) {
                 MazeField field = getFieldAt(n.getXCoordinate(), n.getYCoordinate());
                 if (field != null && field.isPath()) {
-                    field.setColor(Color.WHITE); // Reset to original color for path
+                    field.setColor(Color.WHITE);
                 }
             }
-            solutionPath = null;
+            solution = null;
         }
     }
 
@@ -194,7 +195,6 @@ public class Maze {
                     entryX=i;
                 }
 
-
 				else if(line.charAt(i)=='K'){
                     exitY=j;
                     exitX=i;
@@ -204,9 +204,7 @@ public class Maze {
     }
 
     public void resetPathDrawing(){
-
         for(MazeField field: fields){
-
                 field.setDefaultColor();
             }
     }

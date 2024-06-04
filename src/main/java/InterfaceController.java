@@ -29,6 +29,8 @@ class InterfaceController implements ErrorHandler, CLIListener {
 
         @Override
         public void mouseClicked(MouseEvent e) {
+            if(view.getMazeStage().getMaze()==null)
+                return;
             int x = e.getX();
             int y = e.getY();
 
@@ -140,7 +142,6 @@ class InterfaceController implements ErrorHandler, CLIListener {
     }
 
     private void saveSolution(){
-
          JFileChooser fileDialog = new JFileChooser();
         fileDialog.setFileFilter(new FileNameExtensionFilter("Text and Binary Files", "txt"));
         fileDialog.setCurrentDirectory(new File("src/main/resources"));
@@ -198,7 +199,6 @@ class InterfaceController implements ErrorHandler, CLIListener {
         loadMaze(path);
         findSolution();
     }
-
 
     private void loadMaze(String path){
         try{

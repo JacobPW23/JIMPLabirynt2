@@ -51,7 +51,6 @@ public class MazePanel extends JPanel {
     }
 
     public void clearHighlighted() {
-
         if(previousHighlighted != null){
         int prevX=(int)(previousHighlighted.getShape().getX())/10;
         int prevY=(int)(previousHighlighted.getShape().getY())/10;
@@ -67,7 +66,6 @@ public class MazePanel extends JPanel {
             previousHighlighted = null;
 
         }
-
         }
     }
 

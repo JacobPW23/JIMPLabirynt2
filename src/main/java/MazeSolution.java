@@ -135,7 +135,6 @@ public class MazeSolution{
     }
 
     public ArrayList<Node> getNodes(){
-
         return this.pathNodes;
     }
 }
