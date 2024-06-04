@@ -130,7 +130,6 @@ class InterfaceController implements ErrorHandler, CLIListener {
     }
 
     private void saveAsCompressed(){
-
          JFileChooser fileDialog = new JFileChooser();
         fileDialog.setFileFilter(new FileNameExtensionFilter("Text and Binary Files", "bin"));
         fileDialog.setCurrentDirectory(new File("src/main/resources"));
@@ -208,9 +207,9 @@ class InterfaceController implements ErrorHandler, CLIListener {
                 maze=reader.readCompressedMaze(path);
             else if(path.substring(path.lastIndexOf(".")).equals(".txt"))
                 maze= reader.readMaze(path);
-            maze.buildGraph();
             maze.defaultBounds(maze.getGraph());
             view.updateMaze(maze);
+            maze.addErrorListener(this);
             view.getStageContainer().revalidate();
             view.getStageContainer().repaint();
             view.unlockPointButtons();

@@ -67,7 +67,7 @@ public class MainView extends JFrame {
 
         JPanel topRightPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         topRightPanel.setBackground(Color.LIGHT_GRAY);
-        setAlgorithm = new JComboBox<String>(new String[]{"DFS", "BFS", "A*"});
+        setAlgorithm = new JComboBox<String>(new String[]{"BFS", "DFS", "A*"});
         setAlgorithm.setSelectedIndex(0);
         topRightPanel.add(setAlgorithm);
 

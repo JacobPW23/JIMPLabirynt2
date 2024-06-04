@@ -57,7 +57,6 @@ public class MazeField {
         this.shape = shape;
     }
     public void setDefaultColor(){
-
         this.color=defaultColor;
     }
 }

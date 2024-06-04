@@ -156,8 +156,13 @@ public class Maze {
         Node start = graph.getNodeAt(x, y);
         if (start != null) {
             graph.setBeginningNode(start);
+            if(lastStartPoint!=null){
+                lastStartPoint.setHighlight(false);
+
+            }
+            lastStartPoint=getFieldAt(x,y);
         } else {
-            System.out.println("Niepoprawny punkt początkowy: (" + x + ", " + y + ")");
+            notifyErrorListeners(new Exception( "Nieprawidłowy punkt startowy: " + "(" + x + ", " + y + ")"));
         }
     }
 
@@ -165,10 +170,17 @@ public class Maze {
         Node end = graph.getNodeAt(x, y);
         if (end != null) {
             graph.setEndNode(end);
+            if(lastEndPoint!=null){
+                lastEndPoint.setHighlight(false);
+
+            }
+            lastEndPoint=getFieldAt(x,y);
         } else {
-            System.out.println("Niepoprawny punkt końcowy: (" + x + ", " + y + ")");
+            //Można dodać obsługę błędu
+            notifyErrorListeners(new Exception( "Nieprawidłowy punkt końcowy: " + "("+ x + ", " + y + ")"));
         }
     }
+
 
     public MazeGraph getGraph() {
         return graph;

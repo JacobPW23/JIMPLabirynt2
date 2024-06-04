@@ -47,7 +47,6 @@ public class MazeSolver {
     }
 
     public MazeSolution getSolution(){
-
         return new MazeSolution(new ArrayList<Node>(solutionStack));
     }
 
